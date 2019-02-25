@@ -1,7 +1,6 @@
-SOURCES =
+SOURCES = ../../start.pyw \
 
-TRANSLATIONS = zh_CN.ts \
-               en_US.ts
+TRANSLATIONS = zh_CN.ts
 
 CODECFORTR = UTF-8
 

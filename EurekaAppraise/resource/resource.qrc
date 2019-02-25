@@ -1,5 +1,11 @@
 <RCC>
     <qresource prefix="qss/" >
+        <file alias="light.qss">./qss/light.css</file>
+    </qresource>
+    <qresource prefix="qss/" >
         <file alias="dark.qss">./qss/dark.css</file>
+    </qresource>
+    <qresource prefix="qm/" >
+        <file alias="zh_CN.qm">./qm/zh_CN.qm</file>
     </qresource>
 </RCC>
