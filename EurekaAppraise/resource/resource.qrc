@@ -1,11 +1,23 @@
 <RCC>
     <qresource prefix="qss/" >
         <file alias="light.qss">./qss/light.css</file>
-    </qresource>
-    <qresource prefix="qss/" >
         <file alias="dark.qss">./qss/dark.css</file>
     </qresource>
     <qresource prefix="qm/" >
         <file alias="zh_CN.qm">./qm/zh_CN.qm</file>
     </qresource>
+    <qresource prefix="icon/" >
+        <file alias="icon.png">./image/icon/icon.png</file>
+    </qresource>
+    <qresource prefix="border/" >
+        <file alias="border-bottom.png">./image/border/border-bottom.png</file>
+        <file alias="border-left.png">./image/border/border-left.png</file>
+        <file alias="border-right.png">./image/border/border-right.png</file>
+        <file alias="border-top.png">./image/border/border-top.png</file>
+        <file alias="border-left-bottom.png">./image/border/border-left-bottom.png</file>
+        <file alias="border-right-bottom.png">./image/border/border-right-bottom.png</file>
+        <file alias="border-left-top.png">./image/border/border-left-top.png</file>
+        <file alias="border-right-top.png">./image/border/border-right-top.png</file>
+    </qresource>
+
 </RCC>

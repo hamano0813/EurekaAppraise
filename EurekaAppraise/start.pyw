@@ -33,7 +33,8 @@ translator = QtCore.QTranslator()
 translator.load(f':/qm/{language}')
 app.installTranslator(translator)
 
-style_file = QtCore.QFile(f':/qss/{style}.qss')
+# style_file = QtCore.QFile(f':/qss/{style}.qss')
+style_file = QtCore.QFile('./resource/qss/light.css')
 style_file.open(QtCore.QFile.ReadOnly)
 stylesheet = bytearray(style_file.readAll()).decode('UTF-8')
 app.setStyleSheet(stylesheet)
@@ -64,7 +65,8 @@ class InitializeFolder(QtCore.QObject):
 
 InitializeFolder()
 
-appraise = MainWindow()
+rect = app.desktop().availableGeometry()
+appraise = MainWindow(rect)
 appraise.show()
 
 sys.exit(app.exec_())

@@ -1,0 +1,38 @@
+/****************所有控件****************/
+* {
+    font-family: 'Microsoft YaHei UI', '微软雅黑', monospace;
+    font-size: 10pt;
+    font-weight: 400;
+    color: #000000;
+}
+
+/***************无边框标题***************/
+TitleLabel {
+    background-color: qlineargradient(x1:0, y1: 0, x2:0, y2: 1, stop: 0 #FFFFFF, stop: 1 #E0E0E0);
+    text-align: bottom center;
+}
+.TitleLabel {
+    margin: 0;
+    padding-top: 6px;
+    padding-left: 90px;
+    padding-right: 120px;
+}
+TitleButton {
+    color: black;
+    border: none;
+    font-family: 'Webdings';
+    font-size: 10pt;
+    font-weight: 100;
+    margin: 0;
+    padding: 0;
+}
+TitleButton#MinButton:hover {
+    background-color: #E0E0E0;
+}
+TitleButton#MaxButton:hover {
+    background-color: #E0E0E0;
+}
+TitleButton#CloseButton:hover {
+    background-color: #FF0000;
+    color: white;
+}

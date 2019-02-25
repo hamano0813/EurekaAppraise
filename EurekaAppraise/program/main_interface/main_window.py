@@ -5,14 +5,17 @@ import os
 import sqlite3
 from PyQt5 import QtWidgets, QtGui
 from .create_dialog import CreateDialog
+from ..branch_thread import CreateDatabaseThread
+from ..custom_widget import UnFrameWindow
 from resource import *
 
 
-class MainWindow(QtWidgets.QMainWindow):
+class MainWindow(UnFrameWindow):
     conn: sqlite3.Connection = None
+    branch_thread = QtCore.QThread()
 
-    def __init__(self, parent=None, flags=QtCore.Qt.WindowMinMaxButtonsHint | QtCore.Qt.WindowCloseButtonHint):
-        QtWidgets.QMainWindow.__init__(self, parent, flags)
+    def __init__(self, rect):
+        UnFrameWindow.__init__(self, rect)
 
         self.create_project_action = self.create_action(self.tr('New'), self.create_project,
                                                         ':/icon/create_project.png')
@@ -36,7 +39,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.toolbar.setIconSize(QtCore.QSize(24, 24))
         self.toolbar.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon)
 
-        self.setWindowIcon(QtGui.QIcon(':/icon/program.png'))
+        self.setMinimumSize(640, 480)
+        self.setWindowIcon(QtGui.QIcon(':/icon/icon.png'))
         self.setWindowTitle(self.tr('Eureka Appraise'))
 
     def create_project(self):
@@ -44,6 +48,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if project_file:
             if os.path.exists(project_file):
                 box = QtWidgets.QMessageBox(QtWidgets.QMessageBox.Warning, '', '')
+                box.setWindowIcon(QtGui.QIcon(':/icon/icon.png'))
                 box.setWindowTitle(self.tr('Warning'))
                 box.setText(self.tr('Project file already exists!\nOverwrite?'))
                 yes = box.addButton(self.tr('Confirm'), QtWidgets.QMessageBox.YesRole)
@@ -56,7 +61,15 @@ class MainWindow(QtWidgets.QMainWindow):
             self.conn = sqlite3.connect(project_file)
 
     def create_database(self, file, code):
-        pass
+        self.conn = sqlite3.connect(file)
+        create_database_thread = CreateDatabaseThread(self.conn, code, self)
+        create_database_thread.moveToThread(self.branch_thread)
+        create_database_thread.logPrinter.connect(print)
+        create_database_thread.errorPrinter.connect(print)
+        create_database_thread.finished.connect(self.set_enabled)
+        create_database_thread.finished.connect(self.branch_thread.quit)
+        self.branch_thread.started.connect(create_database_thread.work)
+        self.branch_thread.start()
 
     def load_project(self):
         pass
@@ -95,6 +108,9 @@ class MainWindow(QtWidgets.QMainWindow):
                 elif child_object is None:
                     menu.addSeparator()
         return menu
+
+    def set_enabled(self, enabled: bool = True):
+        self.close_project_action.setEnabled(enabled)
 
     def closeEvent(self, event):
         self.close_project()
