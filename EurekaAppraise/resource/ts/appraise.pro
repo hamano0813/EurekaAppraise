@@ -1,4 +1,6 @@
 SOURCES = ../../start.pyw \
+          ../../program/main_interface/main_window.py \
+          ../../program/main_interface/create_dialog.py \
 
 TRANSLATIONS = zh_CN.ts
 

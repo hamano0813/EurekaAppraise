@@ -6,6 +6,7 @@ import sys
 import configparser
 import locale
 from PyQt5 import QtWidgets
+from program.main_interface.main_window import MainWindow
 from resource import *
 
 config = configparser.ConfigParser()
@@ -62,5 +63,8 @@ class InitializeFolder(QtCore.QObject):
 
 
 InitializeFolder()
+
+appraise = MainWindow()
+appraise.show()
 
 sys.exit(app.exec_())
