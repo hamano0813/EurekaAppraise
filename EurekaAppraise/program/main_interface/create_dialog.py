@@ -8,7 +8,7 @@ from PyQt5 import QtWidgets, QtCore
 
 class CreateSpin(QtWidgets.QSpinBox):
     def __init__(self, min_value: int, max_value: int, default: int = None, parent=None):
-        super(CreateSpin, self).__init__(parent)
+        QtWidgets.QSpinBox.__init__(self, parent)
         self.setRange(min_value, max_value)
         self.setValue(default) if default else self.setValue(min_value)
         self.setAlignment(QtCore.Qt.AlignRight)
@@ -27,7 +27,7 @@ class CreateDialog(QtWidgets.QDialog):
     # noinspection PyArgumentList
     def __init__(self, parent=None,
                  flags=QtCore.Qt.CustomizeWindowHint | QtCore.Qt.MSWindowsFixedSizeDialogHint | QtCore.Qt.Tool):
-        super(CreateDialog, self).__init__(parent, flags)
+        QtWidgets.QDialog.__init__(self, parent, flags)
         self.year_spin = CreateSpin(2015, 2030, datetime.date.today().year)
         self.code_spin = CreateSpin(100, 999)
 

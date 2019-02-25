@@ -12,7 +12,7 @@ class MainWindow(QtWidgets.QMainWindow):
     conn: sqlite3.Connection = None
 
     def __init__(self, parent=None, flags=QtCore.Qt.WindowMinMaxButtonsHint | QtCore.Qt.WindowCloseButtonHint):
-        super(MainWindow, self).__init__(parent, flags)
+        QtWidgets.QMainWindow.__init__(self, parent, flags)
 
         self.create_project_action = self.create_action(self.tr('New'), self.create_project,
                                                         ':/icon/create_project.png')
