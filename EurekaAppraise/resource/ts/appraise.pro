@@ -1,0 +1,8 @@
+SOURCES =
+
+TRANSLATIONS = zh_CN.ts \
+               en_US.ts
+
+CODECFORTR = UTF-8
+
+CODECFORSRC = UTF-8
