@@ -6,20 +6,26 @@ from PyQt5 import QtCore
 from ..initialize_setting import *
 
 
-class CreateDatabaseThread(QtCore.QObject):
+class CreateProjectThread(QtCore.QThread):
+    conn: sqlite3.Connection
     logPrinter = QtCore.pyqtSignal(str)
     errorPrinter = QtCore.pyqtSignal(str)
-    finished = QtCore.pyqtSignal()
+    finished = QtCore.pyqtSignal(str)
 
-    def __init__(self, conn: sqlite3.Connection, code: str, parent=None):
+    def __init__(self, file: str, code: str, parent=None):
         QtCore.QObject.__init__(self, parent)
-        self.conn = conn
+        self.file = file
         self.code = code
 
-    def work(self):
+    def run(self):
+        self.conn = sqlite3.connect(self.file)
         self.create_table(BASIC_TABLE)
         self.create_table(ASSET_TABLE)
-        self.finished.emit()
+        self.create_table(SPECIAL_TABLE)
+        self.conn.close()
+        self.conn = None
+        self.logPrinter.emit(self.tr('create project completed'))
+        self.finished.emit(self.file)
 
     def create_table(self, settings: dict):
         c = self.conn.cursor()
@@ -40,7 +46,7 @@ class CreateDatabaseThread(QtCore.QObject):
                 c.execute(view_stmt)
                 self.logPrinter.emit(self.tr('create view ') + f'{view_name}')
             except sqlite3.OperationalError as e:
-                self.errorPrinter.emit(str(str(e)))
+                self.errorPrinter.emit(str(e))
         return c.close()
 
     def insert_data(self, settings: dict):

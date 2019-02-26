@@ -7,7 +7,7 @@ from PyQt5 import QtWidgets, QtGui
 from .create_dialog import CreateDialog
 from .load_dialog import LoadDialog
 from .option_dialog import OptionDialog
-from ..branch_thread import CreateDatabaseThread
+from ..branch_thread import CreateProjectThread
 from ..custom_widget import UnFrameWindow
 from resource import *
 
@@ -41,6 +41,9 @@ class MainWindow(UnFrameWindow):
         self.toolbar.setIconSize(QtCore.QSize(24, 24))
         self.toolbar.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon)
 
+        self.status = QtWidgets.QStatusBar()
+        self.setStatusBar(self.status)
+
         self.setMinimumSize(800, 600)
         self.setWindowIcon(QtGui.QIcon(':/icon/icon.png'))
         self.setWindowTitle(self.tr('Eureka Appraise'))
@@ -50,6 +53,7 @@ class MainWindow(UnFrameWindow):
     def create_project(self):
         project_file, project_code = CreateDialog().get_project_path()
         if project_file:
+            self.close_project()
             if os.path.exists(project_file):
                 box = QtWidgets.QMessageBox(QtWidgets.QMessageBox.Warning, '', '')
                 box.setWindowIcon(QtGui.QIcon(':/icon/icon.png'))
@@ -59,22 +63,13 @@ class MainWindow(UnFrameWindow):
                 box.addButton(self.tr('Cancel'), QtWidgets.QMessageBox.NoRole)
                 box.exec_()
                 if box.clickedButton() == yes:
-                    self.close_project()
                     os.remove(project_file)
-            self.create_database(project_file, project_code)
-            self.conn = sqlite3.connect(project_file)
-            self.set_enabled()
-
-    def create_database(self, file, code):
-        self.conn = sqlite3.connect(file)
-        create_database_thread = CreateDatabaseThread(self.conn, code, self)
-        create_database_thread.moveToThread(self.branch_thread)
-        create_database_thread.logPrinter.connect(print)
-        create_database_thread.errorPrinter.connect(print)
-        create_database_thread.finished.connect(self.set_enabled)
-        create_database_thread.finished.connect(self.branch_thread.quit)
-        self.branch_thread.started.connect(create_database_thread.work)
-        self.branch_thread.start()
+            self.setEnabled(False)
+            create_database_thread = CreateProjectThread(project_file, project_code, self)
+            create_database_thread.logPrinter.connect(self.status.showMessage)
+            create_database_thread.errorPrinter.connect(print)
+            create_database_thread.finished.connect(self.start_project)
+            create_database_thread.start()
 
     def load_project(self):
         conn = LoadDialog().load_project()
@@ -102,7 +97,13 @@ class MainWindow(UnFrameWindow):
             box.setWindowIcon(QtGui.QIcon(':/icon/icon.png'))
             box.exec_()
             if box.clickedButton() == yes:
+                os.startfile('start.pyw')
                 self.close()
+
+    def start_project(self, file: str):
+        self.conn = sqlite3.connect(file)
+        self.set_enabled(True)
+        self.setEnabled(True)
 
     def create_action(self, name: str, slot: classmethod = None, icon: str = None) -> QtWidgets.QAction:
         action = QtWidgets.QAction(name, self)

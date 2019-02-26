@@ -2,19 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="zh_CN" sourcelanguage="en">
 <context>
-    <name>CreateDatabaseThread</name>
-    <message>
-        <location filename="../../program/branch_thread/create_database.py" line="31"/>
-        <source>create table </source>
-        <translation>创建 表 </translation>
-    </message>
-    <message>
-        <location filename="../../program/branch_thread/create_database.py" line="41"/>
-        <source>create view </source>
-        <translation>创建 视图 </translation>
-    </message>
-</context>
-<context>
     <name>CreateDialog</name>
     <message>
         <location filename="../../program/main_interface/create_dialog.py" line="34"/>
@@ -35,6 +22,24 @@
         <location filename="../../program/main_interface/create_dialog.py" line="45"/>
         <source>Project Code</source>
         <translation>项目编号</translation>
+    </message>
+</context>
+<context>
+    <name>CreateProjectThread</name>
+    <message>
+        <location filename="../../program/branch_thread/create_project.py" line="27"/>
+        <source>create project completed</source>
+        <translation>创建项目完成</translation>
+    </message>
+    <message>
+        <location filename="../../program/branch_thread/create_project.py" line="37"/>
+        <source>create table </source>
+        <translation>新建 表 </translation>
+    </message>
+    <message>
+        <location filename="../../program/branch_thread/create_project.py" line="47"/>
+        <source>create view </source>
+        <translation>新建 视图 </translation>
     </message>
 </context>
 <context>
@@ -116,49 +121,49 @@
         <translation>工具栏</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/main_window.py" line="46"/>
+        <location filename="../../program/main_interface/main_window.py" line="49"/>
         <source>Eureka Appraise</source>
         <translation>资产评估辅助工具</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/main_window.py" line="56"/>
+        <location filename="../../program/main_interface/main_window.py" line="60"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/main_window.py" line="57"/>
+        <location filename="../../program/main_interface/main_window.py" line="61"/>
         <source>Project file already exists!
 Overwrite?</source>
         <translation>项目文件已经存在！
 是否覆盖？</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/main_window.py" line="58"/>
+        <location filename="../../program/main_interface/main_window.py" line="62"/>
         <source>Confirm</source>
         <translation>确认</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/main_window.py" line="59"/>
+        <location filename="../../program/main_interface/main_window.py" line="63"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/main_window.py" line="98"/>
+        <location filename="../../program/main_interface/main_window.py" line="93"/>
         <source>Alert</source>
         <translation>提示</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/main_window.py" line="99"/>
+        <location filename="../../program/main_interface/main_window.py" line="94"/>
         <source>Restart program to switch setting?</source>
         <translation>重启程序以切换设置？</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/main_window.py" line="100"/>
+        <location filename="../../program/main_interface/main_window.py" line="95"/>
         <source>Yes</source>
         <translation>同意</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/main_window.py" line="101"/>
+        <location filename="../../program/main_interface/main_window.py" line="96"/>
         <source>Wait</source>
         <translation>等待</translation>
     </message>
@@ -171,42 +176,42 @@ Overwrite?</source>
         <translation>默认文件夹设置</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/option_dialog.py" line="18"/>
+        <location filename="../../program/main_interface/option_dialog.py" line="19"/>
         <source>Select</source>
         <translation>选择</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/option_dialog.py" line="25"/>
+        <location filename="../../program/main_interface/option_dialog.py" line="26"/>
         <source>Language Switch (after restart)</source>
         <translation>语言切换（重启后生效）</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/option_dialog.py" line="38"/>
+        <location filename="../../program/main_interface/option_dialog.py" line="39"/>
         <source>Style Switch (after restart)</source>
         <translation>风格切换（重启后生效）</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/option_dialog.py" line="39"/>
+        <location filename="../../program/main_interface/option_dialog.py" line="40"/>
         <source>Light</source>
         <translation>亮色</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/option_dialog.py" line="40"/>
+        <location filename="../../program/main_interface/option_dialog.py" line="41"/>
         <source>Dark</source>
         <translation>暗色</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/option_dialog.py" line="51"/>
+        <location filename="../../program/main_interface/option_dialog.py" line="52"/>
         <source>Confirm</source>
         <translation>确认</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/option_dialog.py" line="84"/>
+        <location filename="../../program/main_interface/option_dialog.py" line="85"/>
         <source>Select default folder</source>
         <translation>选择默认文件夹</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/option_dialog.py" line="52"/>
+        <location filename="../../program/main_interface/option_dialog.py" line="53"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>

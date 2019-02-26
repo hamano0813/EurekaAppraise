@@ -15,6 +15,7 @@ class OptionDialog(QtWidgets.QDialog):
         path_group = QtWidgets.QGroupBox(self.tr('Default Folder Setting'))
         self.path_line = QtWidgets.QLineEdit()
         self.path_line.setReadOnly(True)
+        self.path_line.setContextMenuPolicy(QtCore.Qt.NoContextMenu)
         path_button = QtWidgets.QPushButton(self.tr('Select'))
         path_layout = QtWidgets.QGridLayout()
         path_layout.addWidget(self.path_line, 0, 0, 1, 1)
