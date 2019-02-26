@@ -22,6 +22,8 @@ class CreateProjectThread(QtCore.QThread):
         self.create_table(BASIC_TABLE)
         self.create_table(ASSET_TABLE)
         self.create_table(SPECIAL_TABLE)
+
+        self.insert_data(ASSET_INSERT)
         self.conn.close()
         self.conn = None
         self.logPrinter.emit(self.tr('create project completed'))
@@ -51,9 +53,12 @@ class CreateProjectThread(QtCore.QThread):
 
     def insert_data(self, settings: dict):
         c = self.conn.cursor()
-        for data_name, data_stmt in settings.items():
+        for table_name, field_settings in settings.items():
+            field, data =  field_settings
             try:
-                c.execute(data_stmt)
+                c.executemany(f'INSERT INTO [{table_name}] ({field}) VALUES (?)', data)
+                self.conn.commit()
+                self.logPrinter.emit(self.tr('insert data to ' + f'{table_name}'))
             except sqlite3.OperationalError as e:
                 self.errorPrinter.emit(str(e))
         return c.close()
