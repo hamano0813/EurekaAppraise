@@ -24,10 +24,20 @@ class CreateProjectThread(QtCore.QThread):
         self.create_table(SPECIAL_TABLE)
 
         self.insert_data(ASSET_INSERT)
+        self.special_run()
         self.conn.close()
         self.conn = None
         self.logPrinter.emit(self.tr('create project completed'))
         self.finished.emit(self.file)
+
+    def special_run(self):
+        c = self.conn.cursor()
+        try:
+            c.execute(f"INSERT INTO [基础信息] ([项目编号]) VALUES ('{self.code}');")
+            self.conn.commit()
+        except sqlite3.OperationalError as e:
+            self.errorPrinter.emit(str(e))
+        return c.close()
 
     def create_table(self, settings: dict):
         c = self.conn.cursor()
@@ -58,7 +68,7 @@ class CreateProjectThread(QtCore.QThread):
             try:
                 c.executemany(f'INSERT INTO [{table_name}] ({field}) VALUES (?)', data)
                 self.conn.commit()
-                self.logPrinter.emit(self.tr('insert data to ' + f'{table_name}'))
+                self.logPrinter.emit(self.tr('insert data to ') + f'{table_name}')
             except sqlite3.OperationalError as e:
                 self.errorPrinter.emit(str(e))
         return c.close()

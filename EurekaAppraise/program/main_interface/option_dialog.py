@@ -80,11 +80,12 @@ class OptionDialog(QtWidgets.QDialog):
         path = config.get('path', 'default_folder')
         self.path_line.setText(path)
 
+        self.dialog = QtWidgets.QFileDialog()
+        self.dialog.setWindowTitle(self.tr('Select default folder'))
+        self.dialog.setDirectory(self.path_line.text())
+
     def set_path(self):
-        dialog = QtWidgets.QFileDialog()
-        dialog.setWindowTitle(self.tr('Select default folder'))
-        dialog.setDirectory(self.path_line.text())
-        path = dialog.getExistingDirectory(options=QtWidgets.QFileDialog.ShowDirsOnly)
+        path = self.dialog.getExistingDirectory(options=QtWidgets.QFileDialog.ShowDirsOnly)
         if path:
             self.path_line.setText(path)
 

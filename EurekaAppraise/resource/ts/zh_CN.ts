@@ -27,19 +27,24 @@
 <context>
     <name>CreateProjectThread</name>
     <message>
-        <location filename="../../program/branch_thread/create_project.py" line="27"/>
+        <location filename="../../program/branch_thread/create_project.py" line="29"/>
         <source>create project completed</source>
         <translation>创建项目完成</translation>
     </message>
     <message>
-        <location filename="../../program/branch_thread/create_project.py" line="37"/>
+        <location filename="../../program/branch_thread/create_project.py" line="39"/>
         <source>create table </source>
-        <translation>新建 表 </translation>
+        <translation>新建表 </translation>
     </message>
     <message>
-        <location filename="../../program/branch_thread/create_project.py" line="47"/>
+        <location filename="../../program/branch_thread/create_project.py" line="49"/>
         <source>create view </source>
-        <translation>新建 视图 </translation>
+        <translation>新建视图 </translation>
+    </message>
+    <message>
+        <location filename="../../program/branch_thread/create_project.py" line="61"/>
+        <source>insert data to </source>
+        <translation>插入数据至</translation>
     </message>
 </context>
 <context>
