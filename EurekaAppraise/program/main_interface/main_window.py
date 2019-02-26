@@ -5,6 +5,7 @@ import os
 import sqlite3
 from PyQt5 import QtWidgets, QtGui
 from .create_dialog import CreateDialog
+from .load_dialog import LoadDialog
 from ..branch_thread import CreateDatabaseThread
 from ..custom_widget import UnFrameWindow
 from resource import *
@@ -39,7 +40,7 @@ class MainWindow(UnFrameWindow):
         self.toolbar.setIconSize(QtCore.QSize(24, 24))
         self.toolbar.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon)
 
-        self.setMinimumSize(640, 480)
+        self.setMinimumSize(800, 600)
         self.setWindowIcon(QtGui.QIcon(':/icon/icon.png'))
         self.setWindowTitle(self.tr('Eureka Appraise'))
 
@@ -72,7 +73,9 @@ class MainWindow(UnFrameWindow):
         self.branch_thread.start()
 
     def load_project(self):
-        pass
+        conn = LoadDialog().load_project()
+        if conn:
+            self.conn = conn
 
     def close_project(self):
         if self.conn:

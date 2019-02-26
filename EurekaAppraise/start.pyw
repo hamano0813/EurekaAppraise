@@ -5,7 +5,7 @@ import os
 import sys
 import configparser
 import locale
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, QtGui
 from program.main_interface.main_window import MainWindow
 from resource import *
 
@@ -57,6 +57,7 @@ class InitializeFolder(QtCore.QObject):
                 self.box.setWindowTitle(self.tr('Error'))
                 self.box.setText(self.tr('Must choose folder!'))
                 self.box.addButton(self.tr('Close'), QtWidgets.QMessageBox.NoRole)
+                self.box.setWindowIcon(QtGui.QIcon(':/icon/icon.png'))
                 self.box.exec_()
                 sys.exit()
         elif not os.path.exists(path):

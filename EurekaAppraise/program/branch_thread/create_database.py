@@ -30,7 +30,7 @@ class CreateDatabaseThread(QtCore.QObject):
                 c.execute(f'CREATE TABLE [{table_name}] (\n{field_stmt});')
                 self.logPrinter.emit(self.tr('create table ') + f'{table_name}')
             except sqlite3.OperationalError as e:
-                self.errorPrinter.emit(e)
+                self.errorPrinter.emit(str(e))
         return c.close()
 
     def create_view(self, settings: dict):
@@ -40,7 +40,7 @@ class CreateDatabaseThread(QtCore.QObject):
                 c.execute(view_stmt)
                 self.logPrinter.emit(self.tr('create view ') + f'{view_name}')
             except sqlite3.OperationalError as e:
-                self.errorPrinter.emit(e)
+                self.errorPrinter.emit(str(str(e)))
         return c.close()
 
     def insert_data(self, settings: dict):
@@ -49,5 +49,5 @@ class CreateDatabaseThread(QtCore.QObject):
             try:
                 c.execute(data_stmt)
             except sqlite3.OperationalError as e:
-                self.errorPrinter.emit(e)
+                self.errorPrinter.emit(str(e))
         return c.close()
