@@ -1,7 +1,6 @@
 /****************所有控件****************/
 * {
     font-family: 'Microsoft YaHei UI', '微软雅黑', monospace;
-    font-size: 10pt;
     font-weight: 400;
     color: #000000;
 }
@@ -12,6 +11,7 @@ TitleLabel {
     text-align: bottom center;
 }
 .TitleLabel {
+    font-size: 10pt;
     margin: 0;
     padding-top: 6px;
     padding-left: 90px;

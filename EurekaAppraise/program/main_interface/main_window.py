@@ -6,6 +6,7 @@ import sqlite3
 from PyQt5 import QtWidgets, QtGui
 from .create_dialog import CreateDialog
 from .load_dialog import LoadDialog
+from .option_dialog import OptionDialog
 from ..branch_thread import CreateDatabaseThread
 from ..custom_widget import UnFrameWindow
 from resource import *
@@ -44,6 +45,8 @@ class MainWindow(UnFrameWindow):
         self.setWindowIcon(QtGui.QIcon(':/icon/icon.png'))
         self.setWindowTitle(self.tr('Eureka Appraise'))
 
+        self.set_enabled(False)
+
     def create_project(self):
         project_file, project_code = CreateDialog().get_project_path()
         if project_file:
@@ -60,6 +63,7 @@ class MainWindow(UnFrameWindow):
                     os.remove(project_file)
             self.create_database(project_file, project_code)
             self.conn = sqlite3.connect(project_file)
+            self.set_enabled()
 
     def create_database(self, file, code):
         self.conn = sqlite3.connect(file)
@@ -76,6 +80,7 @@ class MainWindow(UnFrameWindow):
         conn = LoadDialog().load_project()
         if conn:
             self.conn = conn
+            self.set_enabled(True)
 
     def close_project(self):
         if self.conn:
@@ -84,9 +89,20 @@ class MainWindow(UnFrameWindow):
             c.close()
             self.conn.close()
             self.conn = None
+        self.set_enabled(False)
 
     def option_setting(self):
-        pass
+        charge = OptionDialog().set_option()
+        if charge:
+            box = QtWidgets.QMessageBox(QtWidgets.QMessageBox.Information, '', '')
+            box.setWindowTitle(self.tr('Alert'))
+            box.setText(self.tr('Restart program to switch setting?'))
+            yes = box.addButton(self.tr('Yes'), QtWidgets.QMessageBox.YesRole)
+            box.addButton(self.tr('Wait'), QtWidgets.QMessageBox.NoRole)
+            box.setWindowIcon(QtGui.QIcon(':/icon/icon.png'))
+            box.exec_()
+            if box.clickedButton() == yes:
+                self.close()
 
     def create_action(self, name: str, slot: classmethod = None, icon: str = None) -> QtWidgets.QAction:
         action = QtWidgets.QAction(name, self)

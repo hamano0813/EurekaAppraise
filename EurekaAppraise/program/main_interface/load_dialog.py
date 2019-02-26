@@ -55,6 +55,7 @@ class LoadDialog(QtWidgets.QDialog):
 
         load_table_group = QtWidgets.QGroupBox(self.tr('Project List'))
         self.load_table_view = ProjectTableView()
+        self.load_table_view.doubleClicked.connect(self.accept)
         load_table_layout = QtWidgets.QGridLayout()
         load_table_layout.addWidget(self.load_table_view)
         load_table_group.setLayout(load_table_layout)
