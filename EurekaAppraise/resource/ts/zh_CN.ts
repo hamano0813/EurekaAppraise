@@ -2,6 +2,19 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="zh_CN" sourcelanguage="en">
 <context>
+    <name>AccountModel</name>
+    <message>
+        <location filename="../../program/asset_method/table_tree/account_model.py" line="46"/>
+        <source>Code</source>
+        <translation>编号</translation>
+    </message>
+    <message>
+        <location filename="../../program/asset_method/table_tree/account_model.py" line="46"/>
+        <source>Name</source>
+        <translation>名称</translation>
+    </message>
+</context>
+<context>
     <name>CreateDialog</name>
     <message>
         <location filename="../../program/main_interface/create_dialog.py" line="34"/>
@@ -27,24 +40,37 @@
 <context>
     <name>CreateProjectThread</name>
     <message>
-        <location filename="../../program/branch_thread/create_project.py" line="29"/>
+        <location filename="../../program/branch_thread/create_project.py" line="30"/>
         <source>create project completed</source>
         <translation>创建项目完成</translation>
     </message>
     <message>
-        <location filename="../../program/branch_thread/create_project.py" line="39"/>
+        <location filename="../../program/branch_thread/create_project.py" line="49"/>
         <source>create table </source>
         <translation>新建表 </translation>
     </message>
     <message>
-        <location filename="../../program/branch_thread/create_project.py" line="49"/>
+        <location filename="../../program/branch_thread/create_project.py" line="59"/>
         <source>create view </source>
         <translation>新建视图 </translation>
     </message>
     <message>
-        <location filename="../../program/branch_thread/create_project.py" line="61"/>
+        <location filename="../../program/branch_thread/create_project.py" line="71"/>
         <source>insert data to </source>
         <translation>插入数据至</translation>
+    </message>
+</context>
+<context>
+    <name>DetailVerticalHeader</name>
+    <message>
+        <location filename="../../program/asset_method/work_table/detail_vertical.py" line="21"/>
+        <source>Insert</source>
+        <translation>插入行</translation>
+    </message>
+    <message>
+        <location filename="../../program/asset_method/work_table/detail_vertical.py" line="25"/>
+        <source>Remove</source>
+        <translation>删除行</translation>
     </message>
 </context>
 <context>
@@ -211,7 +237,7 @@ Overwrite?</source>
         <translation>确认</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/option_dialog.py" line="85"/>
+        <location filename="../../program/main_interface/option_dialog.py" line="84"/>
         <source>Select default folder</source>
         <translation>选择默认文件夹</translation>
     </message>
