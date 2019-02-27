@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtWidgets import QLineEdit
+from PyQt5 import QtWidgets
 
 
-class TextEdit(QLineEdit):
+class LineEdit(QtWidgets.QLineEdit):
     def __init__(self, parent, length=20, *args):
-        super(TextEdit, self).__init__(parent, *args)
+        QtWidgets.QLineEdit.__init__(self, parent, *args)
         self.setMaxLength(length)
 
     @property

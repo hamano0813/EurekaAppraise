@@ -8,7 +8,7 @@ from .detail_model import DetailModel
 
 class DetailView(QtWidgets.QTableView):
     def __init__(self, parent=None):
-        super(DetailView, self).__init__(parent)
+        QtWidgets.QTableView.__init__(self, parent)
         self.setModel = self.set_width(self.setModel)
         self.setVerticalHeader(DetailVerticalHeader(QtCore.Qt.Vertical, self))
         self.setSelectionBehavior(QtWidgets.QTableView.SelectRows | QtWidgets.QTableView.SelectColumns)
@@ -59,3 +59,6 @@ class DetailView(QtWidgets.QTableView):
             else:
                 func(event)
         return wrapper
+
+
+

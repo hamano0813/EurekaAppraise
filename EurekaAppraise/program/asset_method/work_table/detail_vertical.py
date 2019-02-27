@@ -7,7 +7,7 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 
 class DetailVerticalHeader(QtWidgets.QHeaderView):
     def __init__(self, orient=QtCore.Qt.Vertical, parent=None):
-        super(DetailVerticalHeader, self).__init__(orient, parent)
+        QtWidgets.QHeaderView.__init__(self, orient, parent)
         self.setFixedWidth(50)
         self.setDefaultAlignment(QtCore.Qt.AlignCenter)
         self.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)

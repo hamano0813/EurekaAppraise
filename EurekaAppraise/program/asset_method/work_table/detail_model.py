@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import sqlite3
+import datetime
 from dateutil import parser
 from PyQt5 import QtCore
 
@@ -9,24 +10,29 @@ from PyQt5 import QtCore
 class DetailModel(QtCore.QAbstractTableModel):
     totalChanged = QtCore.pyqtSignal(list)
     detailChanged = QtCore.pyqtSignal(bool)
+    title_name: list
+    data_type: list
+    auto_formula: tuple
+    basic_date: datetime.datetime
+    _data: list
 
     def __init__(self, conn: sqlite3.Connection, table_name: str, parent=None):
-        super(DetailModel, self).__init__(parent)
+        QtCore.QAbstractTableModel.__init__(self, parent)
         self.allows = True
         self.conn = conn
         self.table_name = table_name
-        self._data, self.title_name, self.data_type, self.auto_formula, self.basic_date = self.set_table(table_name)
+        self.initialize_data()
 
-    def set_table(self, table_name):
+    def initialize_data(self):
         c = self.conn.cursor()
-        parameters = c.execute(f'PRAGMA table_info([表{table_name}]);').fetchall()
-        title_name = [parameter[1] for parameter in parameters]
-        data_type = [parameter[2].capitalize() for parameter in parameters]
-        auto_formula = c.execute(f"SELECT [强制], [等式] FROM [公式] WHERE [表名]='表{table_name}';").fetchall()
-        basic_date = parser.parser(c.execute(f'SELECT [评估基准日] FROM [基础信息];').fetchall()[0][0])
-        raw_data = [list(row) for row in c.execute(f'SELECT * FROM [表{table_name}];').fetchall()]
+        parameters = c.execute(f'PRAGMA table_info([{self.table_name}]);').fetchall()
+        self.title_name = [parameter[1] for parameter in parameters]
+        self.data_type = [parameter[2].capitalize() for parameter in parameters]
+        self.auto_formula = c.execute(f"SELECT [强制], [等式] FROM [公式] WHERE [表名]='{self.table_name}';").fetchall()
+        # self.basic_date = parser.parse(c.execute(f'SELECT [评估基准日] FROM [基础信息];').fetchall()[0][0])
+        self.basic_date = datetime.datetime(2019, 12, 31)
+        self._data = [list(row) for row in c.execute(f'SELECT * FROM [{self.table_name}];').fetchall()]
         c.close()
-        return raw_data, title_name, data_type, auto_formula, basic_date
 
     def headerData(self, section: int, orientation, role=QtCore.Qt.DisplayRole):
         if orientation == QtCore.Qt.Horizontal and role == QtCore.Qt.DisplayRole:
@@ -46,12 +52,12 @@ class DetailModel(QtCore.QAbstractTableModel):
     def data(self, index: QtCore.QModelIndex, role=None):
         if not index.isValid():
             return QtCore.QVariant()
-        elif role == QtCore.Qt.DisplayRole:
+        if role == QtCore.Qt.DisplayRole:
             if index.row() == self.rowCount() - 1 or self._data[index.row()][index.column()] is None:
                 return ''
             elif self.data_type[index.column()] == 'Date':
                 try:
-                    return parser.parser(self._data[index.row()][index.column()]).strftime('%Y-%m-%d')
+                    return parser.parse(self._data[index.row()][index.column()]).strftime('%Y-%m-%d')
                 except ValueError as e:
                     print(e)
                     return self._data[index.row()][index.column()]
@@ -72,11 +78,7 @@ class DetailModel(QtCore.QAbstractTableModel):
                 return QtCore.QVariant()
             elif self.data_type[index.column()] in ('Percent', 'Int', 'Real', 'Rate'):
                 return QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter
-            elif self.data_type[index.column()] == 'Bool':
-                return QtCore.Qt.AlignCenter
             return QtCore.QVariant()
-        elif role == QtCore.Qt.CheckStateRole:
-            return QtCore.Qt.Checked if self._data[index.row()][index.column()] else QtCore.Qt.Unchecked
         elif role == QtCore.Qt.EditRole:
             if index.row() == self.rowCount() - 1 or self._data[index.row()][index.column()] is None:
                 return None
@@ -87,12 +89,6 @@ class DetailModel(QtCore.QAbstractTableModel):
     def setData(self, index: QtCore.QModelIndex, value, role=QtCore.Qt.EditRole):
         if not index.isValid():
             return QtCore.QVariant()
-
-        if role == QtCore.Qt.CheckStateRole and self.data_type[index.column()] == 'Bool':
-            if value == QtCore.Qt.Checked:
-                self._data[index.row()][index.column()] = True
-            else:
-                self._data[index.row()][index.column()] = False
         elif role == QtCore.Qt.EditRole:
             if index.row() == self.rowCount() - 1:
                 self.insertRows(index.row())
@@ -111,13 +107,11 @@ class DetailModel(QtCore.QAbstractTableModel):
             return True
 
     def flags(self, index: QtCore.QModelIndex):
-        if not index.isValid() or index.row() == self.rowCount() - 1:
-            return QtCore.QVariant()
+        if not index.isValid():
+            QtCore.QVariant()
         for locking, formula in self.auto_formula:
             if locking and self.title_name[index.column()] == formula.split('=')[0]:
                 return QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable
-        if self.data_type[index.column()] == 'Bool':
-            return QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable
         return QtCore.Qt.ItemIsEditable | QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable
 
     def insertRows(self, position, rows=1, index=QtCore.QModelIndex(), *args, **kwargs):
@@ -154,7 +148,7 @@ class DetailModel(QtCore.QAbstractTableModel):
 
     def aging(self, date_text):
         try:
-            date = parser.parser(date_text)
+            date = parser.parse(date_text)
         except ValueError as e:
             print(e)
             return None
@@ -194,35 +188,34 @@ class DetailModel(QtCore.QAbstractTableModel):
 
     def paste_data(self, index: QtCore.QModelIndex, value):
         _value = None
-        if self.data_type[index.column()] == 'Date':
+        data_type: str = self.data_type[index.column()]
+        if data_type == 'Date':
             try:
-                _value = str(parser.parser(value)) if str(parser.parser(value)) != 'NaT' else None
+                _value = str(parser.parse(value)) if str(parser.parse(value)) != 'NaT' else None
             except ValueError as e:
                 print(e)
-        elif self.data_type[index.column()] == 'Percent':
+        elif data_type == 'Percent':
             try:
                 if '%' in str(value):
                     _value = float(str(value).replace(',', '', 5).replace('%', '')) / 100
                 _value = float(str(value).replace(',', '', 5))
             except ValueError as e:
                 print(e)
-        elif self.data_type[index.column()] == 'Int':
+        elif data_type == 'Int':
             try:
                 _value = int(str(value).replace(',', '', 5))
             except ValueError as e:
                 print(e)
-
-        elif self.data_type[index.column()] in ('Real', 'Rate'):
+        elif data_type in ('Real', 'Rate'):
             try:
                 _value = float(str(value).replace(',', '', 5))
             except ValueError as e:
                 print(e)
-        elif self.data_type[index.column()].split('(')[0] == 'Nchar':
+        elif data_type.startswith('Nchar'):
             try:
                 _value = str(value)
             except ValueError as e:
                 print(e)
-
         self.setData(index, _value)
 
     def copy_range(self, select_range):
@@ -236,8 +229,8 @@ class DetailModel(QtCore.QAbstractTableModel):
 
     def save_data(self):
         c = self.conn.cursor()
-        c.execute(f'DELETE FROM [表{self.table_name}];')
+        c.execute(f'DELETE FROM [{self.table_name}];')
         placeholder = ', '.join((['?'] * self.columnCount()))
-        c.executemany(f'INSERT INTO [表{self.table_name}] VALUES ({placeholder})', self._data)
+        c.executemany(f'INSERT INTO [{self.table_name}] VALUES ({placeholder})', self._data)
         c.close()
         self.conn.commit()

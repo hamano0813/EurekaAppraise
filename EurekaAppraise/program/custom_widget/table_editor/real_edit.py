@@ -1,16 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtWidgets import QLineEdit
-from PyQt5.QtGui import QRegExpValidator
-from PyQt5.QtCore import Qt, QRegExp
+from PyQt5 import QtWidgets, QtCore, QtGui
 
 
-class RealEdit(QLineEdit):
+class RealEdit(QtWidgets.QLineEdit):
     def __init__(self, parent=None, *args):
-        super(RealEdit, self).__init__(parent, *args)
-        self.setAlignment(Qt.AlignRight)
-        self.setValidator(QRegExpValidator(QRegExp('^[+-]?\\d*(\\.\\d{0,2})?')))
+        QtWidgets.QLineEdit.__init__(self, parent, *args)
+        self.setAlignment(QtCore.Qt.AlignRight)
+        self.setValidator(QtGui.QRegExpValidator(QtCore.QRegExp('^[+-]?\\d*(\\.\\d{0,2})?')))
         self.editingFinished.connect(self.get_real)
 
     def get_real(self):
