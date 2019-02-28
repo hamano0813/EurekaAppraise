@@ -3,6 +3,7 @@
 
 import sqlite3
 from PyQt5 import QtCore, QtGui
+from ...initialize_setting import ASSET_TABLE, SUMMARY_VIEW
 
 
 class TreeItem:
@@ -40,9 +41,8 @@ class TreeItem:
 
 class AccountModel(QtCore.QAbstractItemModel):
     def __init__(self, conn: sqlite3.Connection, account_tree: dict, parent=None):
-        super(AccountModel, self).__init__(parent)
+        QtCore.QAbstractItemModel.__init__(self, parent)
         self.conn = conn
-        self.c = self.conn.cursor()
         self.root_item = TreeItem((self.tr('Code'), self.tr('Name')))
         self.add_data(account_tree, self.root_item)
 
@@ -55,13 +55,30 @@ class AccountModel(QtCore.QAbstractItemModel):
     def data(self, index: QtCore.QModelIndex, role=None):
         if not index.isValid():
             return None
+        if not self.conn:
+            return None
         if role == QtCore.Qt.TextColorRole:
             table_name = index.internalPointer().data(0)
+            c = self.conn.cursor()
             try:
-                if self.c.execute(f'SELECT count(*) FROM [表{table_name}];').fetchone()[0]:
-                    return QtGui.QColor(QtCore.Qt.blue)
+                if self.code(index, QtCore.Qt.DisplayRole) in ASSET_TABLE:
+                    if c.execute(f'SELECT count(*) FROM [{table_name}];').fetchone()[0]:
+                        return QtGui.QColor(QtCore.Qt.blue)
+                elif self.code(index, QtCore.Qt.DisplayRole) in SUMMARY_VIEW:
+                    try:
+                        if c.execute(f'SELECT sum([_账面价值_] + [评估价值_]) FROM [{table_name}];').fetchone()[0]:
+                            return QtGui.QColor(QtCore.Qt.blue)
+                    except sqlite3.OperationalError as e:
+                        print(e)
+                    try:
+                        if c.execute(f'SELECT sum([_账面原值_] + [评估原值_]) FROM [{table_name}];').fetchone()[0]:
+                            return QtGui.QColor(QtCore.Qt.blue)
+                    except sqlite3.OperationalError as e:
+                        print(e)
             except sqlite3.OperationalError as e:
                 print(e)
+            finally:
+                c.close()
         if role != QtCore.Qt.DisplayRole:
             return None
         item = index.internalPointer()
@@ -99,7 +116,7 @@ class AccountModel(QtCore.QAbstractItemModel):
         else:
             return QtCore.QModelIndex()
 
-    def parent(self, index: QtCore.QModelIndex=None):
+    def parent(self, index: QtCore.QModelIndex = None):
         if not index.isValid():
             return QtCore.QModelIndex()
         child_item = index.internalPointer()

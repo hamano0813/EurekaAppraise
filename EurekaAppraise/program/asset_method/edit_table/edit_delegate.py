@@ -3,7 +3,7 @@
 
 from PyQt5 import QtWidgets, QtCore, QtGui
 from ...custom_widget.table_editor import *
-from .detail_model import DetailModel
+from .edit_model import EditModel
 
 EDITOR = {
     'Date': DateEdit,
@@ -14,12 +14,12 @@ EDITOR = {
 }
 
 
-class DetailDelegate(QtWidgets.QStyledItemDelegate):
+class EditDelegate(QtWidgets.QStyledItemDelegate):
     def __init__(self, parent=None):
         QtWidgets.QStyledItemDelegate.__init__(self, parent)
 
     def paint(self, painter: QtGui.QPainter, option: QtWidgets.QStyleOptionViewItem, index: QtCore.QModelIndex):
-        model: DetailModel = index.model()
+        model: EditModel = index.model()
         data_type: str = model.data_type[index.column()]
         if data_type == 'Bool':
             checkbox_option = QtWidgets.QStyleOptionButton()
@@ -35,7 +35,7 @@ class DetailDelegate(QtWidgets.QStyledItemDelegate):
         return QtWidgets.QStyledItemDelegate.paint(self, painter, option, index)
 
     def editorEvent(self, event: QtCore.QEvent, model: QtCore.QAbstractItemModel, option, index: QtCore.QModelIndex):
-        model: DetailModel = index.model()
+        model: EditModel = index.model()
         data_type: str = model.data_type[index.column()]
         rect: QtCore.QRect = option.rect
         if event.type() == QtCore.QEvent.MouseButtonPress and rect.contains(event.pos()):
@@ -46,10 +46,12 @@ class DetailDelegate(QtWidgets.QStyledItemDelegate):
         return QtWidgets.QStyledItemDelegate.editorEvent(self, event, model, option, index)
 
     def createEditor(self, parent, option, index: QtCore.QModelIndex):
-        model: DetailModel = index.model()
+        model: EditModel = index.model()
         data_type: str = model.data_type[index.column()]
         if data_type.startswith('Nchar'):
             editor = LineEdit(parent, int(data_type.split('(')[1].rstrip(')')))
+        elif data_type == 'Bool':
+            editor = QtCore.QVariant()
         elif data_type in EDITOR:
             editor = EDITOR[data_type](parent)
         else:
@@ -58,7 +60,7 @@ class DetailDelegate(QtWidgets.QStyledItemDelegate):
 
     def setEditorData(self, editor, index: QtCore.QModelIndex):
         data = index.model().data(index, QtCore.Qt.EditRole)
-        if editor == type(QtWidgets.QLineEdit):
+        if type(QtWidgets.QLineEdit) == editor:
             if data:
                 editor.setText(str(data))
             else:
@@ -67,7 +69,7 @@ class DetailDelegate(QtWidgets.QStyledItemDelegate):
             editor.value = data
 
     def setModelData(self, editor, item_model: QtCore.QAbstractItemModel, index: QtCore.QModelIndex):
-        if editor == type(QtWidgets.QLineEdit):
+        if type(QtWidgets.QLineEdit) == editor:
             if editor.text():
                 item_model.setData(index, editor.text())
             else:

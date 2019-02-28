@@ -101,7 +101,7 @@ class UnFrameWindow(QtWidgets.QWidget):
         self.setMouseTracking(True)
 
     def __getattr__(self, attr):
-        if attr in ('menuBar', 'addToolBar', 'setStatusBar', 'setCentralWidget', 'centralWidget'):
+        if attr in ('menuBar', 'addToolBar', 'setStatusBar', 'setCentralWidget', 'centralWidget', 'addDockWidget'):
             return getattr(self.main_window, attr)
         else:
             return getattr(self, attr)

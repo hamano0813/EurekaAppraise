@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from typing import List
 from PyQt5 import QtCore
 
 
 class TotalModel(QtCore.QAbstractTableModel):
     def __init__(self, parent=None):
-        super(TotalModel, self).__init__(parent)
-        self._summary = [None]
+        QtCore.QAbstractTableModel.__init__(self, parent)
+        self._summary: List[float] = [None]
 
     def rowCount(self, parent=QtCore.QModelIndex(), *args, **kwargs):
         return 1
@@ -17,15 +18,14 @@ class TotalModel(QtCore.QAbstractTableModel):
 
     def headerData(self, section, orientation, role=QtCore.Qt.DisplayRole):
         if orientation == QtCore.Qt.Vertical and role == QtCore.Qt.DisplayRole:
-            return '合计'
+            return self.tr('Total')
         return QtCore.QVariant()
 
     def data(self, index: QtCore.QModelIndex, role=None):
         if not index.isValid():
             return QtCore.QVariant()
         elif role == QtCore.Qt.DisplayRole:
-            if self._summary[index.column()]:
-                # noinspection PyTypeChecker
+            if self._summary[index.column()] is not None:
                 return f'{float(self._summary[index.column()]):,.02f}'
             else:
                 return ''

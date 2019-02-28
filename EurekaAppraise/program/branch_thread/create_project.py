@@ -23,6 +23,8 @@ class CreateProjectThread(QtCore.QThread):
         self.create_table(ASSET_TABLE)
         self.create_table(SPECIAL_TABLE)
 
+        self.create_view(SUMMARY_VIEW)
+
         self.insert_data(ASSET_INSERT)
         self.special_run()
         self.conn.close()
@@ -32,8 +34,9 @@ class CreateProjectThread(QtCore.QThread):
 
     def special_run(self):
         c = self.conn.cursor()
+        date = self.code.split('-')[0] + '-01-01'
         try:
-            c.execute(f"INSERT INTO [基础信息] ([项目编号]) VALUES ('{self.code}');")
+            c.execute(f"INSERT INTO [基础信息] ([项目编号], [评估基准日]) VALUES ('{self.code}', '{date}');")
             self.conn.commit()
         except sqlite3.OperationalError as e:
             self.errorPrinter.emit(str(e))
@@ -64,9 +67,10 @@ class CreateProjectThread(QtCore.QThread):
     def insert_data(self, settings: dict):
         c = self.conn.cursor()
         for table_name, field_settings in settings.items():
-            field, data =  field_settings
+            field, data = field_settings
+            placeholder = ', '.join((['?'] * len(data[0])))
             try:
-                c.executemany(f'INSERT INTO [{table_name}] ({field}) VALUES (?)', data)
+                c.executemany(f'INSERT INTO [{table_name}] ({field}) VALUES ({placeholder})', data)
                 self.conn.commit()
                 self.logPrinter.emit(self.tr('insert data to ') + f'{table_name}')
             except sqlite3.OperationalError as e:

@@ -8,8 +8,12 @@ from .create_dialog import CreateDialog
 from .load_dialog import LoadDialog
 from .option_dialog import OptionDialog
 from ..branch_thread import CreateProjectThread
+from ..asset_method.account_tree import AccountTree
+from ..asset_method.edit_table import EditTable
+from ..asset_method.summary_table import SummaryTable
 from ..custom_widget import UnFrameWindow
-from resource import *
+from ..initialize_setting import ASSET_TABLE, SUMMARY_VIEW
+from program.resource import *
 
 
 class MainWindow(UnFrameWindow):
@@ -18,24 +22,76 @@ class MainWindow(UnFrameWindow):
 
     def __init__(self, rect):
         UnFrameWindow.__init__(self, rect)
+        self.account_dock = QtWidgets.QDockWidget(self.tr('Account'), self, QtCore.Qt.CustomizeWindowHint)
+        self.account_dock.setObjectName('Account Dock')
+        self.account_dock.setFeatures(
+            QtWidgets.QDockWidget.NoDockWidgetFeatures | QtWidgets.QDockWidget.DockWidgetClosable)
 
-        self.create_project_action = self.create_action(self.tr('New'), self.create_project,
-                                                        ':/icon/create_project.png')
-        self.load_project_action = self.create_action(self.tr('Load'), self.load_project,
-                                                      ':/icon/load_project.png')
-        self.close_project_action = self.create_action(self.tr('Close'), self.close_project,
-                                                       ':/icon/close_project.png')
-        self.option_setting_action = self.create_action(self.tr('Option'), self.option_setting,
-                                                        ':/icon/path_setting.png')
-        self.exit_program_action = self.create_action(self.tr('Exit'), self.close)
-        self.project_menu = self.create_menu(self.tr('Project'), None,
-                                             [self.create_project_action,
-                                              self.load_project_action,
-                                              self.close_project_action,
-                                              self.option_setting_action,
-                                              self.exit_program_action])
+        create_project_action = self.create_action(self.tr('New'), self.create_project,
+                                                   ':/icon/create_project.png')
+        load_project_action = self.create_action(self.tr('Load'), self.load_project,
+                                                 ':/icon/load_project.png')
+        close_project_action = self.create_action(self.tr('Close'), self.close_project,
+                                                  ':/icon/close_project.png')
+        program_setting_action = self.create_action(self.tr('Setting'), self.option_setting,
+                                                    ':/icon/path_setting.png')
+        exit_program_action = self.create_action(self.tr('Exit'), self.close)
+        project_menu = self.create_menu(self.tr('Project'), None,
+                                        [create_project_action,
+                                         load_project_action,
+                                         close_project_action,
+                                         program_setting_action,
+                                         exit_program_action])
 
-        self.menuBar().addMenu(self.project_menu)
+        project_information_action = self.create_action(self.tr('Project Information'))
+        material_list_action = self.create_action(self.tr('Material List'))
+        field_record_action = self.create_action(self.tr('Field Record'))
+        project_contract_action = self.create_action(self.tr('Project Contract'))
+        commitment_letter_action = self.create_action(self.tr('Commitment Letter'))
+        service_question_action = self.create_action(self.tr('Service Question'))
+        cash_check_action = self.create_action(self.tr('Cash Check'))
+        current_letter_action = self.create_action(self.tr('Current Letter'))
+        output_menu = self.create_menu(self.tr('Output'), None,
+                                       [material_list_action,
+                                        field_record_action,
+                                        project_contract_action,
+                                        commitment_letter_action,
+                                        service_question_action,
+                                        cash_check_action,
+                                        current_letter_action])
+        work_menu = self.create_menu(self.tr('Field Work'), None,
+                                     [project_information_action,
+                                      output_menu])
+
+        asset_method_action = self.create_action(self.tr('Asset Method'), self.asset_method)
+        income_method_action = self.create_action(self.tr('Income Method'))
+        appraise_menu = self.create_menu(self.tr('Appraise Work'), None,
+                                         [asset_method_action,
+                                          income_method_action])
+
+        appraise_report_action = self.create_action(self.tr('Appraise Report'))
+        appraise_explain_action = self.create_action(self.tr('Appraise Explain'))
+        declaration_form_action = self.create_action(self.tr('Declaration Form'))
+        detail_form_action = self.create_action(self.tr('Detail Form'))
+        work_draft = self.create_action(self.tr('Work Draft'))
+        generate_menu = self.create_menu(self.tr('Generate'), None,
+                                         [appraise_report_action,
+                                          appraise_explain_action,
+                                          declaration_form_action,
+                                          detail_form_action,
+                                          work_draft])
+
+        work_staff_action = self.create_action(self.tr('Staff'))
+        about_program_action = self.create_action(self.tr('About'))
+        option_menu = self.create_menu(self.tr('Option'), None,
+                                       [work_staff_action,
+                                        about_program_action])
+
+        self.menuBar().addMenu(project_menu)
+        self.menuBar().addMenu(work_menu)
+        self.menuBar().addMenu(appraise_menu)
+        self.menuBar().addMenu(generate_menu)
+        self.menuBar().addMenu(option_menu)
 
         self.toolbar: QtWidgets.QToolBar = self.addToolBar(self.tr('Toolbar'))
         self.toolbar.setIconSize(QtCore.QSize(24, 24))
@@ -44,7 +100,7 @@ class MainWindow(UnFrameWindow):
         self.status = QtWidgets.QStatusBar()
         self.setStatusBar(self.status)
 
-        self.setMinimumSize(800, 600)
+        self.setMinimumSize(1280, 800)
         self.setWindowIcon(QtGui.QIcon(':/icon/icon.png'))
         self.setWindowTitle(self.tr('Eureka Appraise'))
 
@@ -97,8 +153,22 @@ class MainWindow(UnFrameWindow):
             box.setWindowIcon(QtGui.QIcon(':/icon/icon.png'))
             box.exec_()
             if box.clickedButton() == yes:
-                os.startfile('start.pyw')
+                os.startfile('appraise.pyw')
                 self.close()
+
+    def asset_method(self):
+        account_tree = AccountTree(self.conn, self)
+        self.account_dock.setWidget(account_tree)
+        self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.account_dock)
+        self.account_dock.show()
+
+    def open_account(self, index: QtCore.QModelIndex):
+        table_name = index.internalPointer().data(0)
+        if table_name in ASSET_TABLE:
+            table = EditTable(self.conn, table_name, self)
+        elif table_name in SUMMARY_VIEW:
+            table = SummaryTable(self.conn, table_name, self)
+        self.setCentralWidget(table)
 
     def start_project(self, file: str):
         self.conn = sqlite3.connect(file)
@@ -130,8 +200,16 @@ class MainWindow(UnFrameWindow):
         return menu
 
     def set_enabled(self, enabled: bool = True):
-        self.close_project_action.setEnabled(enabled)
+        self.findChild(QtWidgets.QAction, self.tr('Close')).setEnabled(enabled)
+        self.findChild(QtWidgets.QMenu, self.tr('Field Work')).setEnabled(enabled)
+        self.findChild(QtWidgets.QMenu, self.tr('Appraise Work')).setEnabled(enabled)
+        self.findChild(QtWidgets.QMenu, self.tr('Generate')).setEnabled(enabled)
+        self.findChild(QtWidgets.QMenu, self.tr('Option')).setEnabled(enabled)
+        if not enabled:
+            if self.account_dock:
+                self.account_dock.hide()
+            self.main_window.setCentralWidget(QtWidgets.QLabel())
 
-    def closeEvent(self, event):
+    def closeEvent(self, event: QtCore.QEvent):
         self.close_project()
         event.accept()

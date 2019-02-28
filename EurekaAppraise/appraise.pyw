@@ -7,7 +7,8 @@ import configparser
 import locale
 from PyQt5 import QtWidgets, QtGui
 from program.main_interface.main_window import MainWindow
-from resource import *
+from program.resource import *
+
 
 config = configparser.ConfigParser()
 
@@ -33,8 +34,7 @@ translator = QtCore.QTranslator()
 translator.load(f':/qm/{language}')
 app.installTranslator(translator)
 
-# style_file = QtCore.QFile(f':/qss/{style}.qss')
-style_file = QtCore.QFile('./resource/qss/light.css')
+style_file = QtCore.QFile(f':/qss/{style}.qss')
 style_file.open(QtCore.QFile.ReadOnly)
 stylesheet = bytearray(style_file.readAll()).decode('UTF-8')
 app.setStyleSheet(stylesheet)
@@ -67,7 +67,7 @@ class InitializeFolder(QtCore.QObject):
 InitializeFolder()
 
 rect = app.desktop().availableGeometry()
-appraise = MainWindow(rect)
-appraise.show()
+main_window = MainWindow(rect)
+main_window.show()
 
 sys.exit(app.exec_())

@@ -5,7 +5,7 @@ from functools import partial
 from PyQt5 import QtWidgets, QtCore, QtGui
 
 
-class DetailVerticalHeader(QtWidgets.QHeaderView):
+class EditVerticalHeader(QtWidgets.QHeaderView):
     def __init__(self, orient=QtCore.Qt.Vertical, parent=None):
         QtWidgets.QHeaderView.__init__(self, orient, parent)
         self.setFixedWidth(50)
@@ -13,7 +13,6 @@ class DetailVerticalHeader(QtWidgets.QHeaderView):
         self.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         # noinspection PyUnresolvedReferences
         self.customContextMenuRequested[QtCore.QPoint].connect(self.header_menu)
-        self.setSectionsClickable(True)
 
     def header_menu(self, pos: QtCore.QPoint):
         position_idx = self.parent().indexAt(pos).row()
