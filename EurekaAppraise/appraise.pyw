@@ -39,6 +39,9 @@ style_file.open(QtCore.QFile.ReadOnly)
 stylesheet = bytearray(style_file.readAll()).decode('UTF-8')
 app.setStyleSheet(stylesheet)
 
+style_temp = QtWidgets.QStyleFactory().create('Windows')
+app.setStyle(style_temp)
+
 
 class InitializeFolder(QtCore.QObject):
     def __init__(self):
@@ -66,8 +69,8 @@ class InitializeFolder(QtCore.QObject):
 
 InitializeFolder()
 
-rect = app.desktop().availableGeometry()
-main_window = MainWindow(rect)
+# rect = app.desktop().availableGeometry()
+main_window = MainWindow()
 main_window.show()
 
 sys.exit(app.exec_())

@@ -82,8 +82,11 @@ class UnFrameWindow(QtWidgets.QWidget):
         close_button.setFixedHeight(TITLE_HEIGHT)
         close_button.clicked.connect(self.close)
 
-        self.main_window = QtWidgets.QMainWindow(None, QtCore.Qt.FramelessWindowHint)
+        self.main_window = QtWidgets.QMainWindow(None, QtCore.Qt.FramelessWindowHint)  # self
+        self.main_window.setCentralWidget(QtWidgets.QFrame())
+        self.main_window.centralWidget().setMouseTracking(True)
         self.main_window.setMouseTracking(True)
+        self.setMouseTracking(True)
 
         main_layout = QtWidgets.QGridLayout()
         main_layout.setContentsMargins(BORDER_WIDTH, BORDER_WIDTH, BORDER_WIDTH, BORDER_WIDTH)
@@ -97,8 +100,6 @@ class UnFrameWindow(QtWidgets.QWidget):
 
         self.setLayout(main_layout)
         self.setMinimumSize = self._set_size(self.setMinimumSize)
-        self.setMinimumSize(320, 240)
-        self.setMouseTracking(True)
 
     def __getattr__(self, attr):
         if attr in ('menuBar', 'addToolBar', 'setStatusBar', 'setCentralWidget', 'centralWidget', 'addDockWidget'):
@@ -175,6 +176,8 @@ class UnFrameWindow(QtWidgets.QWidget):
         self.move_drag_position = event.globalPos() - self.pos()
 
     def mouseMoveEvent(self, event: QtGui.QMouseEvent):
+        print(event.pos())
+        print(event.globalPos(), event.localPos(), event.screenPos(), event.windowPos())
         if event.pos() in self._corner_rect:
             self.setCursor(QtCore.Qt.SizeFDiagCursor)
         elif event.pos() in self._bottom_rect:

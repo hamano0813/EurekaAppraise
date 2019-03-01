@@ -15,9 +15,9 @@ class EditView(QtWidgets.QTableView):
         self.setModel = self.set_width(self.setModel)
         self.setVerticalHeader(EditVerticalHeader(QtCore.Qt.Vertical, self))
         self.setSelectionBehavior(QtWidgets.QTableView.SelectRows | QtWidgets.QTableView.SelectColumns)
-        self.setWordWrap(False)
         self.verticalHeader().setSectionsClickable(True)
         self.horizontalHeader().setHighlightSections(False)
+        self.setWordWrap(False)
         self.keyPressEvent = self.key_press(self.keyPressEvent)
 
     def set_width(self, func):
@@ -34,7 +34,7 @@ class EditView(QtWidgets.QTableView):
                 elif data_type == 'Int':
                     self.setColumnWidth(idx, max(80, title_width))
                 elif data_type == 'Percent':
-                    self.setColumnWidth(idx, max(80, title_width))
+                    self.setColumnWidth(idx, max(70, title_width))
                 elif data_type == 'Bool':
                     self.setColumnWidth(idx, max(30, title_width))
                 elif data_type.split('(')[0] == 'Nchar':

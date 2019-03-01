@@ -13,6 +13,7 @@ class TotalView(QtWidgets.QTableView):
         self.verticalHeader().setDefaultAlignment(QtCore.Qt.AlignCenter)
         self.verticalHeader().setHighlightSections(False)
         self.setFixedHeight(33)
+        self.setWordWrap(False)
         self.keyPressEvent = self.key_press(self.keyPressEvent)
 
     def set_width(self, idx, old, new):

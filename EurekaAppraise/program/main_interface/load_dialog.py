@@ -92,8 +92,6 @@ class LoadDialog(QtWidgets.QDialog):
         self.load_table_view.setModel(project_table_model)
         self.load_table_view.setColumnWidth(0, 80)
         self.load_table_view.setColumnWidth(1, 320)
-        if len(project_table):
-            self.load_table_view.setCurrentIndex(project_table_model.createIndex(0, 0))
         if self.exec_() and len(project_table):
             project_file = path + project_table[self.load_table_view.currentIndex().row()][0] + '.db3'
             return sqlite3.connect(project_file)

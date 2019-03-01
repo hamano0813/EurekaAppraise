@@ -144,7 +144,6 @@ class EditModel(QtCore.QAbstractTableModel):
             try:
                 value = eval(formula_text)
             except NameError as e:
-                print(formula_text, e)
                 value = None
             target_index = self.createIndex(index.row(), self.title_name.index(formula.split('=')[0]))
             self.setData(target_index, value)
@@ -233,7 +232,6 @@ class EditModel(QtCore.QAbstractTableModel):
                     self.paste_data(idx, value)
             self.save_data()
             self.range = True
-            return True
 
     def delete_range(self, select_range: list):
         self.range = False

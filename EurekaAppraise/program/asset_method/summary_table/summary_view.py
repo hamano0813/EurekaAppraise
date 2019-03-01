@@ -19,6 +19,7 @@ class SummaryView(QTableView):
         self.verticalHeader().setDefaultAlignment(Qt.AlignCenter)
         self.verticalHeader().setSectionsClickable(True)
         self.horizontalHeader().setHighlightSections(False)
+        self.setWordWrap(False)
         self.keyPressEvent = self.key_press(self.keyPressEvent)
 
     def set_width(self, func):
@@ -29,7 +30,7 @@ class SummaryView(QTableView):
                 if data_type == 'Real':
                     self.setColumnWidth(idx, max(120, title_width))
                 elif data_type == 'Percent':
-                    self.setColumnWidth(idx, max(60, title_width))
+                    self.setColumnWidth(idx, max(70, title_width))
                 elif data_type.startswith('Nchar'):
                     self.setColumnWidth(idx, max(int(data_type.split('(')[1].rstrip(')')) * 5, title_width))
             self.reset_height()

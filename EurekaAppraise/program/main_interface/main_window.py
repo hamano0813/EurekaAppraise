@@ -11,17 +11,17 @@ from ..branch_thread import CreateProjectThread
 from ..asset_method.account_tree import AccountTree
 from ..asset_method.edit_table import EditTable
 from ..asset_method.summary_table import SummaryTable
-from ..custom_widget import UnFrameWindow
+# from ..custom_widget import UnFrameWindow
 from ..initialize_setting import ASSET_TABLE, SUMMARY_VIEW
 from program.resource import *
 
 
-class MainWindow(UnFrameWindow):
+class MainWindow(QtWidgets.QMainWindow):
     conn: sqlite3.Connection = None
     branch_thread = QtCore.QThread()
 
-    def __init__(self, rect):
-        UnFrameWindow.__init__(self, rect)
+    def __init__(self, parent=None, flags=QtCore.Qt.WindowMinMaxButtonsHint | QtCore.Qt.WindowCloseButtonHint):
+        QtWidgets.QMainWindow.__init__(self, parent, flags)
         self.account_dock = QtWidgets.QDockWidget(self.tr('Account'), self, QtCore.Qt.CustomizeWindowHint)
         self.account_dock.setObjectName('Account Dock')
         self.account_dock.setFeatures(
@@ -131,6 +131,7 @@ class MainWindow(UnFrameWindow):
         conn = LoadDialog().load_project()
         if conn:
             self.conn = conn
+            self.set_enabled(False)
             self.set_enabled(True)
 
     def close_project(self):
@@ -168,6 +169,8 @@ class MainWindow(UnFrameWindow):
             table = EditTable(self.conn, table_name, self)
         elif table_name in SUMMARY_VIEW:
             table = SummaryTable(self.conn, table_name, self)
+        else:
+            table = QtWidgets.QFrame(self, None)
         self.setCentralWidget(table)
 
     def start_project(self, file: str):
@@ -208,7 +211,7 @@ class MainWindow(UnFrameWindow):
         if not enabled:
             if self.account_dock:
                 self.account_dock.hide()
-            self.main_window.setCentralWidget(QtWidgets.QLabel())
+            self.setCentralWidget(QtWidgets.QLabel())
 
     def closeEvent(self, event: QtCore.QEvent):
         self.close_project()
