@@ -20,7 +20,7 @@ class CreateProjectThread(QtCore.QThread):
     def run(self):
         self.conn = sqlite3.connect(self.file)
         self.create_table(BASIC_TABLE)
-        self.create_table(ASSET_TABLE)
+        self.create_table(EDIT_TABLE)
         self.create_table(SPECIAL_TABLE)
 
         self.create_view(SUMMARY_VIEW)

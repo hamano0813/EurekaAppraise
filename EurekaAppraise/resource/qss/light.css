@@ -1,7 +1,8 @@
 /****************所有控件****************/
 * {
-    font-family: 'Microsoft YaHei UI', '微软雅黑', monospace;
-    font-weight: 400;
+    font-family: '微软雅黑', 'Microsoft YaHei UI', monospace;
+    font-size: 10pt;
+    font-weight: 300;
     color: #000000;
 }
 

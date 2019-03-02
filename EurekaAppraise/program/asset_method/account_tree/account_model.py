@@ -3,7 +3,7 @@
 
 import sqlite3
 from PyQt5 import QtCore, QtGui
-from ...initialize_setting import ASSET_TABLE, SUMMARY_VIEW
+from ...initialize_setting import EDIT_TABLE, SUMMARY_VIEW
 
 
 class TreeItem:
@@ -61,14 +61,16 @@ class AccountModel(QtCore.QAbstractItemModel):
             table_name = index.internalPointer().data(0)
             c = self.conn.cursor()
             try:
-                if self.code(index, QtCore.Qt.DisplayRole) in ASSET_TABLE:
+                if self.code(index, QtCore.Qt.DisplayRole) in EDIT_TABLE:
                     if c.execute(f'SELECT count(*) FROM [{table_name}];').fetchone()[0]:
                         return QtGui.QColor(QtCore.Qt.blue)
                 elif self.code(index, QtCore.Qt.DisplayRole) in SUMMARY_VIEW:
+                    if self.code(index, QtCore.Qt.DisplayRole) == '表1':
+                        table_name = '表2'
                     try:
                         if c.execute(f'''
                         SELECT
-                            CASE WHEN sum([_账面价值_]) IS NULL THEN 0 ELSE sum([_账面价值_]) END + 
+                            CASE WHEN sum([_账面价值_]) IS NULL THEN 0 ELSE sum([_账面价值_]) END +
                             CASE WHEN sum([评估价值_]) IS NULL THEN 0 ELSE sum([评估价值_]) END
                         FROM [{table_name}];''').fetchone()[0]:
                             return QtGui.QColor(QtCore.Qt.blue)
@@ -77,9 +79,9 @@ class AccountModel(QtCore.QAbstractItemModel):
                     try:
                         if c.execute(f'''
                         SELECT
-                            CASE WHEN sum([_账面原值_]) IS NULL THEN 0 ELSE sum([_账面原值_]) END + 
-                            CASE WHEN sum([_账面净值_]) IS NULL THEN 0 ELSE sum([_账面净值_]) END + 
-                            CASE WHEN sum([评估原值_]) IS NULL THEN 0 ELSE sum([评估原值_]) END + 
+                            CASE WHEN sum([_账面原值_]) IS NULL THEN 0 ELSE sum([_账面原值_]) END +
+                            CASE WHEN sum([_账面净值_]) IS NULL THEN 0 ELSE sum([_账面净值_]) END +
+                            CASE WHEN sum([评估原值_]) IS NULL THEN 0 ELSE sum([评估原值_]) END +
                             CASE WHEN sum([评估净值_]) IS NULL THEN 0 ELSE sum([评估净值_]) END
                         FROM [{table_name}];''').fetchone()[0]:
                             return QtGui.QColor(QtCore.Qt.blue)

@@ -1,22 +1,20 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtWidgets import QApplication, QTableView
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QKeyEvent
+from PyQt5 import QtWidgets, QtCore, QtGui
 from .summary_model import SummaryModel
 
 CHARACTER_WIDTH = 15
 ROW_HEIGHT = 25
 
 
-class SummaryView(QTableView):
+class SummaryView(QtWidgets.QTableView):
     def __init__(self, parent=None):
-        QTableView.__init__(self, parent)
+        QtWidgets.QTableView.__init__(self, parent)
         self.setModel = self.set_width(self.setModel)
-        self.setSelectionBehavior(QTableView.SelectRows | QTableView.SelectColumns)
+        self.setSelectionBehavior(QtWidgets.QTableView.SelectRows | QtWidgets.QTableView.SelectColumns)
         self.verticalHeader().setFixedWidth(50)
-        self.verticalHeader().setDefaultAlignment(Qt.AlignCenter)
+        self.verticalHeader().setDefaultAlignment(QtCore.Qt.AlignCenter)
         self.verticalHeader().setSectionsClickable(True)
         self.horizontalHeader().setHighlightSections(False)
         self.setWordWrap(False)
@@ -44,9 +42,9 @@ class SummaryView(QTableView):
 
     def key_press(self, func):
         # noinspection PyArgumentList
-        def wrapper(event: QKeyEvent):
-            if event.key() == Qt.Key_C and event.modifiers() == Qt.ControlModifier:
-                QApplication.clipboard().setText(self.model().copy_range(self.selectedIndexes()))
+        def wrapper(event: QtGui.QKeyEvent):
+            if event.key() == QtCore.Qt.Key_C and event.modifiers() == QtCore.Qt.ControlModifier:
+                QtWidgets.QApplication.clipboard().setText(self.model().copy_range(self.selectedIndexes()))
             else:
                 func(event)
 

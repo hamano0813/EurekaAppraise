@@ -12,7 +12,7 @@ from ..asset_method.account_tree import AccountTree
 from ..asset_method.edit_table import EditTable
 from ..asset_method.summary_table import SummaryTable
 # from ..custom_widget import UnFrameWindow
-from ..initialize_setting import ASSET_TABLE, SUMMARY_VIEW
+from ..initialize_setting import EDIT_TABLE, SUMMARY_VIEW
 from program.resource import *
 
 
@@ -165,12 +165,12 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def open_account(self, index: QtCore.QModelIndex):
         table_name = index.internalPointer().data(0)
-        if table_name in ASSET_TABLE:
+        if table_name in EDIT_TABLE:
             table = EditTable(self.conn, table_name, self)
         elif table_name in SUMMARY_VIEW:
             table = SummaryTable(self.conn, table_name, self)
         else:
-            table = QtWidgets.QFrame(self, None)
+            table = EditTable(self.conn, table_name, self)
         self.setCentralWidget(table)
 
     def start_project(self, file: str):

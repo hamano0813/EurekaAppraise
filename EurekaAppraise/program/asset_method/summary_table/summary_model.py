@@ -7,6 +7,7 @@ from PyQt5 import QtCore
 TYPE_DICT = {
     '_编号_': 'Nchar(10)',
     '_科目名称_': 'Nchar(60)',
+    '_项目_': 'Nchar(60)',
     '_账面价值_': 'Real',
     '_账面原值_': 'Real',
     '_账面净值_': 'Real',
@@ -14,7 +15,11 @@ TYPE_DICT = {
     '评估原值_': 'Real',
     '评估净值_': 'Real',
     '增减值_': 'Real',
+    '原值增值额_': 'Real',
+    '净值增值额_': 'Real',
     '增值率_': 'Percent',
+    '原值增值率_': 'Percent',
+    '净值增值率_': 'Percent',
 }
 
 
