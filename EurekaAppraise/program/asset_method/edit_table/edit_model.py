@@ -145,7 +145,7 @@ class EditModel(QtCore.QAbstractTableModel):
             try:
                 value = eval(formula_text)
             except (ZeroDivisionError, NameError) as e:
-                print(e, formula_text)
+                print(formula_text, e)
                 value = None
             target_index = self.createIndex(index.row(), self.title_name.index(formula.split('=')[0]))
             self.operation = True
@@ -212,9 +212,6 @@ class EditModel(QtCore.QAbstractTableModel):
             r = max([index.row() for index in select_range]) - min([index.row() for index in select_range]) + 1
             r -= 1 if max([index.row() for index in select_range]) == self.rowCount() - 1 else 0
             c = max([index.column() for index in select_range]) - min([index.column() for index in select_range]) + 1
-            print('\n'.join(['\t'.join([self.data(select_range[c * rid + cid], QtCore.Qt.DisplayRole)
-                                         for cid in range(c)]) for rid in range(r)]))
-
             return '\n'.join(['\t'.join([self.data(select_range[c * rid + cid], QtCore.Qt.DisplayRole)
                                          for cid in range(c)]) for rid in range(r)])
 
