@@ -135,19 +135,22 @@ class EditModel(QtCore.QAbstractTableModel):
 
     def automatic_operation(self, index: QtCore.QModelIndex, formula_setting: tuple):
         auto, formula = formula_setting
-        self.operation = True
         if auto or not self._data[index.row()][self.title_name.index(formula.split('=')[0])]:
             formula_text = formula.split('=')[1]
             for c_idx, title in enumerate(self.title_name):
                 if not index.row() == self.rowCount() - 1 and self._data[index.row()][c_idx]:
                     formula_text = formula_text.replace(title, str(self._data[index.row()][c_idx]))
+                else:
+                    formula_text = formula_text.replace(title, '0')
             try:
                 value = eval(formula_text)
-            except NameError as e:
+            except (ZeroDivisionError, NameError) as e:
+                print(e, formula_text)
                 value = None
             target_index = self.createIndex(index.row(), self.title_name.index(formula.split('=')[0]))
+            self.operation = True
             self.setData(target_index, value)
-        self.operation = False
+            self.operation = False
 
     def aging(self, date_text):
         try:
@@ -209,6 +212,9 @@ class EditModel(QtCore.QAbstractTableModel):
             r = max([index.row() for index in select_range]) - min([index.row() for index in select_range]) + 1
             r -= 1 if max([index.row() for index in select_range]) == self.rowCount() - 1 else 0
             c = max([index.column() for index in select_range]) - min([index.column() for index in select_range]) + 1
+            print('\n'.join(['\t'.join([self.data(select_range[c * rid + cid], QtCore.Qt.DisplayRole)
+                                         for cid in range(c)]) for rid in range(r)]))
+
             return '\n'.join(['\t'.join([self.data(select_range[c * rid + cid], QtCore.Qt.DisplayRole)
                                          for cid in range(c)]) for rid in range(r)])
 
@@ -216,7 +222,7 @@ class EditModel(QtCore.QAbstractTableModel):
         if select_range and text_data:
             start_row = min([index.row() for index in select_range])
             start_column = min([index.column() for index in select_range])
-            temp_data = [row.split('\t') for row in text_data.split('\n') if row]
+            temp_data = [row.split('\t') for row in text_data.split('\n') if row is not None]
             add_rows = len(temp_data) + start_row + 1 - self.rowCount()
             if add_rows > 0:
                 self.insertRows(self.rowCount() - 1, add_rows)
