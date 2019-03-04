@@ -19,6 +19,7 @@ class EditView(QtWidgets.QTableView):
         self.horizontalHeader().setHighlightSections(False)
         self.setWordWrap(False)
         self.keyPressEvent = self.key_press(self.keyPressEvent)
+        self.setSortingEnabled(True)
 
     def set_width(self, func):
         def wrapper(model: EditModel):

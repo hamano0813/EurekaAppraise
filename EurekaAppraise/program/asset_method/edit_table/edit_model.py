@@ -115,6 +115,21 @@ class EditModel(QtCore.QAbstractTableModel):
                 return QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable
         return QtCore.Qt.ItemIsEditable | QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable
 
+    def sort(self, p_int, order=None):
+        def get_data(row_data):
+            if row_data[p_int]:
+                return row_data[p_int]
+            if self.data_type[p_int].startswith('Nchar'):
+                return ''
+            if self.data_type[p_int] == 'Date':
+                return ''
+            return 0
+
+        self.layoutAboutToBeChanged.emit()
+        self._data = sorted(self._data, key=lambda x: get_data(x), reverse=order == QtCore.Qt.AscendingOrder)
+        self.save_data()
+        self.layoutChanged.emit()
+
     def insertRows(self, position, rows=1, index=QtCore.QModelIndex(), *args, **kwargs):
         self.beginInsertRows(QtCore.QModelIndex(), position, position + rows - 1)
         for row in range(rows):
