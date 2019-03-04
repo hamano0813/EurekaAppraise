@@ -24,4 +24,5 @@ class EditVerticalHeader(QtWidgets.QHeaderView):
             remove_action = QtWidgets.QAction(self.tr('Remove'), self)
             remove_action.triggered.connect(partial(self.parent().model().removeRows, position_idx, 1))
             menu.addAction(remove_action)
-        menu.exec_(QtGui.QCursor().pos())
+        if position_idx >= 0:
+            menu.exec_(QtGui.QCursor().pos())
