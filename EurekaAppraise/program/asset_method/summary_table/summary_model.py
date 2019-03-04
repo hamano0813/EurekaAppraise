@@ -60,7 +60,7 @@ class SummaryModel(QtCore.QAbstractTableModel):
         value = self._data[index.row()][index.column()]
         data_type: str = self.data_type[index.column()]
         if role == QtCore.Qt.DisplayRole:
-            if value is None:
+            if not value:
                 return ''
             elif data_type == 'Percent':
                 return f'{value * 100:,.02f}%'
