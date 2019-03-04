@@ -87,6 +87,19 @@
     </message>
 </context>
 <context>
+    <name>EditView</name>
+    <message>
+        <location filename="../../program/asset_method/edit_table/edit_view.py" line="82"/>
+        <source>Copy</source>
+        <translation>复制</translation>
+    </message>
+    <message>
+        <location filename="../../program/asset_method/edit_table/edit_view.py" line="86"/>
+        <source>Paste</source>
+        <translation>粘贴</translation>
+    </message>
+</context>
+<context>
     <name>InitializeFolder</name>
     <message>
         <location filename="../../appraise.pyw" line="52"/>

@@ -5,6 +5,7 @@ SOURCES = ../../appraise.pyw \
           ../../program/main_interface/option_dialog.py \
           ../../program/branch_thread/create_project.py \
           ../../program/asset_method/account_tree/account_model.py \
+          ../../program/asset_method/edit_table/edit_view.py \
           ../../program/asset_method/edit_table/edit_vertical.py \
           ../../program/asset_method/edit_table/edit_horizontal.py \
           ../../program/asset_method/edit_table/total_model.py \

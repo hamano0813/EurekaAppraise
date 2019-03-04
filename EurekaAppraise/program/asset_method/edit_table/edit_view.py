@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from functools import partial
 from PyQt5 import QtWidgets, QtCore, QtGui
 from .edit_vertical import EditVerticalHeader
 from .edit_horizontal import EditHorizontalHeader
@@ -21,6 +22,9 @@ class EditView(QtWidgets.QTableView):
         self.horizontalHeader().setHighlightSections(False)
         self.setWordWrap(False)
         self.keyPressEvent = self.key_press(self.keyPressEvent)
+        self.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+        # noinspection PyUnresolvedReferences
+        self.customContextMenuRequested[QtCore.QPoint].connect(self.context_menu)
 
     def set_width(self, func):
         def wrapper(model: EditModel):
@@ -69,3 +73,19 @@ class EditView(QtWidgets.QTableView):
                 func(event)
 
         return wrapper
+
+    # noinspection PyArgumentList
+    def context_menu(self, pos: QtCore.QPoint):
+        position_idx = self.indexAt(pos)
+        self.selectedIndexes()
+        menu = QtWidgets.QMenu()
+        copy_action = QtWidgets.QAction(self.tr('Copy'), self)
+        copy_action.triggered.connect(partial(QtWidgets.QApplication.clipboard().setText,
+                                              self.model().copy_range(self.selectedIndexes())))
+        menu.addAction(copy_action)
+        paste_action = QtWidgets.QAction(self.tr('Paste'), self)
+        paste_action.triggered.connect(partial(self.model().paste_range,
+                                               self.selectedIndexes(), QtWidgets.QApplication.clipboard().text()))
+        menu.addAction(paste_action)
+        if position_idx.row() >= 0 and position_idx.column() >= 0:
+            menu.exec_(QtGui.QCursor().pos())
