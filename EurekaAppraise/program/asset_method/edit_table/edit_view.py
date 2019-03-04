@@ -3,6 +3,7 @@
 
 from PyQt5 import QtWidgets, QtCore, QtGui
 from .edit_vertical import EditVerticalHeader
+from .edit_horizontal import EditHorizontalHeader
 from .edit_model import EditModel
 
 CHARACTER_WIDTH = 15
@@ -14,12 +15,12 @@ class EditView(QtWidgets.QTableView):
         QtWidgets.QTableView.__init__(self, parent)
         self.setModel = self.set_width(self.setModel)
         self.setVerticalHeader(EditVerticalHeader(QtCore.Qt.Vertical, self))
+        self.setHorizontalHeader(EditHorizontalHeader(QtCore.Qt.Horizontal, self))
         self.setSelectionBehavior(QtWidgets.QTableView.SelectRows | QtWidgets.QTableView.SelectColumns)
         self.verticalHeader().setSectionsClickable(True)
         self.horizontalHeader().setHighlightSections(False)
         self.setWordWrap(False)
         self.keyPressEvent = self.key_press(self.keyPressEvent)
-        self.setSortingEnabled(True)
 
     def set_width(self, func):
         def wrapper(model: EditModel):

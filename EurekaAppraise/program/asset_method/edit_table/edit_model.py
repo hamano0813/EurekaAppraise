@@ -3,7 +3,6 @@
 
 import sqlite3
 import datetime
-from collections import deque
 from dateutil import parser
 from PyQt5 import QtCore
 
@@ -18,8 +17,6 @@ class EditModel(QtCore.QAbstractTableModel):
 
     def __init__(self, conn: sqlite3.Connection, table_name: str, parent=None):
         QtCore.QAbstractTableModel.__init__(self, parent)
-        self.undo_deque = deque(maxlen=10)
-        self.redo_deque = deque(maxlen=10)
         self.range = self.operation = True
         self.conn = conn
         self.table_name = table_name
@@ -115,18 +112,16 @@ class EditModel(QtCore.QAbstractTableModel):
                 return QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable
         return QtCore.Qt.ItemIsEditable | QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable
 
-    def sort(self, p_int, order=None):
-        def get_data(row_data):
-            if row_data[p_int]:
-                return row_data[p_int]
-            if self.data_type[p_int].startswith('Nchar'):
-                return ''
-            if self.data_type[p_int] == 'Date':
+    def sort(self, column_id, order=None):
+        def get_sorted_key(row_data):
+            if row_data[column_id]:
+                return row_data[column_id]
+            elif self.data_type[column_id].startswith('Nchar') or self.data_type[column_id] == 'Date':
                 return ''
             return 0
 
         self.layoutAboutToBeChanged.emit()
-        self._data = sorted(self._data, key=lambda x: get_data(x), reverse=order == QtCore.Qt.AscendingOrder)
+        self._data = sorted(self._data, key=get_sorted_key, reverse=order == QtCore.Qt.AscendingOrder)
         self.save_data()
         self.layoutChanged.emit()
 
