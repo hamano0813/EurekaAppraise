@@ -89,14 +89,24 @@
 <context>
     <name>EditView</name>
     <message>
-        <location filename="../../program/asset_method/edit_table/edit_view.py" line="82"/>
+        <location filename="../../program/asset_method/edit_table/edit_view.py" line="93"/>
         <source>Copy</source>
         <translation>复制</translation>
     </message>
     <message>
-        <location filename="../../program/asset_method/edit_table/edit_view.py" line="86"/>
+        <location filename="../../program/asset_method/edit_table/edit_view.py" line="99"/>
         <source>Paste</source>
         <translation>粘贴</translation>
+    </message>
+    <message>
+        <location filename="../../program/asset_method/edit_table/edit_view.py" line="96"/>
+        <source>Cut</source>
+        <translation>剪切</translation>
+    </message>
+    <message>
+        <location filename="../../program/asset_method/edit_table/edit_view.py" line="102"/>
+        <source>Clear</source>
+        <translation>清除</translation>
     </message>
 </context>
 <context>

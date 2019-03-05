@@ -54,21 +54,35 @@ class EditView(QtWidgets.QTableView):
         for idx in range(self.model().rowCount()):
             self.setRowHeight(idx, ROW_HEIGHT)
 
-    def key_press(self, func):
+    def delete_range(self):
+        self.model().delete_range(self.selectedIndexes())
+        self.reset()
+
+    def copy_range(self):
         # noinspection PyArgumentList
+        QtWidgets.QApplication.clipboard().setText(self.model().copy_range(self.selectedIndexes()))
+        self.reset()
+
+    def paste_range(self):
+        # noinspection PyArgumentList
+        self.model().paste_range(self.selectedIndexes(), QtWidgets.QApplication.clipboard().text())
+        self.reset()
+
+    def cut_range(self):
+        self.copy_range()
+        self.delete_range()
+        self.reset()
+
+    def key_press(self, func):
         def wrapper(event: QtGui.QKeyEvent):
             if event.key() == QtCore.Qt.Key_Delete:
-                self.model().delete_range(self.selectedIndexes())
-                self.reset()
+                self.delete_range()
             elif event.key() == QtCore.Qt.Key_V and event.modifiers() == QtCore.Qt.ControlModifier:
-                self.model().paste_range(self.selectedIndexes(), QtWidgets.QApplication.clipboard().text())
-                self.reset()
+                self.paste_range()
             elif event.key() == QtCore.Qt.Key_C and event.modifiers() == QtCore.Qt.ControlModifier:
-                QtWidgets.QApplication.clipboard().setText(self.model().copy_range(self.selectedIndexes()))
+                self.copy_range()
             elif event.key() == QtCore.Qt.Key_X and event.modifiers() == QtCore.Qt.ControlModifier:
-                QtWidgets.QApplication.clipboard().setText(self.model().copy_range(self.selectedIndexes()))
-                self.model().delete_range(self.selectedIndexes())
-                self.reset()
+                self.cut_range()
             else:
                 func(event)
 
@@ -80,12 +94,16 @@ class EditView(QtWidgets.QTableView):
         self.selectedIndexes()
         menu = QtWidgets.QMenu()
         copy_action = QtWidgets.QAction(self.tr('Copy'), self)
-        copy_action.triggered.connect(partial(QtWidgets.QApplication.clipboard().setText,
-                                              self.model().copy_range(self.selectedIndexes())))
+        copy_action.triggered.connect(self.copy_range)
         menu.addAction(copy_action)
+        cut_action = QtWidgets.QAction(self.tr('Cut'), self)
+        cut_action.triggered.connect(self.cut_range)
+        menu.addAction(cut_action)
         paste_action = QtWidgets.QAction(self.tr('Paste'), self)
-        paste_action.triggered.connect(partial(self.model().paste_range,
-                                               self.selectedIndexes(), QtWidgets.QApplication.clipboard().text()))
+        paste_action.triggered.connect(self.paste_range)
         menu.addAction(paste_action)
-        if position_idx.row() >= 0 and position_idx.column() >= 0:
+        delete_action = QtWidgets.QAction(self.tr('Clear'), self)
+        delete_action.triggered.connect(self.delete_range)
+        menu.addAction(delete_action)
+        if position_idx.row() >= 0 and position_idx.column() >= 0 and position_idx.row() != self.model().rowCount() - 1:
             menu.exec_(QtGui.QCursor().pos())
