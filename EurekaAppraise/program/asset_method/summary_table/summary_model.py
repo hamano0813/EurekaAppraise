@@ -36,8 +36,8 @@ class SummaryModel(QtCore.QAbstractTableModel):
 
     def initialize_data(self, view_name):
         c = self.conn.cursor()
-        self._data = [list(row) for row in c.execute(f'SELECT * FROM [{view_name}];').fetchall()]
-        self.title_name = [parameter[1] for parameter in c.execute(f'PRAGMA table_info([{view_name}]);').fetchall()]
+        self._data = [list(row)[:-1] for row in c.execute(f'SELECT * FROM [{view_name}];').fetchall()]
+        self.title_name = [para[1] for para in c.execute(f'PRAGMA table_info([{view_name}]);').fetchall()][:-1]
         self.data_type = [TYPE_DICT[name] for name in self.title_name]
         c.close()
 
