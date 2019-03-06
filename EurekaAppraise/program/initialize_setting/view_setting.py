@@ -2,170 +2,248 @@
 # -*- coding: utf-8 -*-
 
 SUMMARY_VIEW = {
+    # 创建视图 表1
     '表1': '''
-CREATE VIEW [表1-tmp] AS 
+CREATE VIEW [表1] AS 
 SELECT
-"流动资产" AS [_项目_],
-[_账面价值_],[评估价值_],[增减值_]
-FROM [表2] WHERE [表2].[_科目名称_]="一、流动资产合计"
+    "流动资产" AS [_项目_],
+    [_账面价值_]/10000 AS [_账面价值_],
+    [评估价值_]/10000 AS [评估价值_],
+    ([评估价值_]-[_账面价值_])/10000 AS [增减值_],
+    ([评估价值_]-[_账面价值_])/[_账面价值_] AS [增值率_],
+    [_账面价值_]+[评估价值_] AS [小计]
+FROM [表3-tot]
 UNION ALL
 SELECT
-"非流动资产" AS [_项目_],
-[_账面价值_],[评估价值_],[增减值_]
-FROM [表2] WHERE [表2].[_科目名称_]="二、非流动资产合计"
+    "非流动资产" AS [_项目_],
+    [_账面价值_]/10000 AS [_账面价值_],
+    [评估价值_]/10000 AS [评估价值_],
+    ([评估价值_]-[_账面价值_])/10000 AS [增减值_],
+    ([评估价值_]-[_账面价值_])/[_账面价值_] AS [增值率_],
+    [_账面价值_]+[评估价值_] AS [小计]
+FROM [表4-tot]
 UNION ALL
 SELECT
-"　　其中：" || [_科目名称_] AS [_项目_],
-[_账面价值_],[评估价值_],[增减值_]
-FROM [表4] WHERE [表4].[_编号_]="4-1"
+    "　　其中：" || [_科目名称_] AS [_项目_],
+    [_账面价值_]/10000 AS [_账面价值_],
+    [评估价值_]/10000 AS [评估价值_],
+    ([评估价值_]-[_账面价值_])/10000 AS [增减值_],
+    ([评估价值_]-[_账面价值_])/[_账面价值_] AS [增值率_],
+    [_账面价值_]+[评估价值_] AS [小计]
+FROM [表4-sum] WHERE [表4-sum].[_编号_]="4-1"
 UNION ALL
 SELECT
-"　　　　　" || [_科目名称_] AS [_项目_],
-[_账面价值_],[评估价值_],[增减值_]
-FROM [表4] WHERE [表4].[_编号_] NOT IN ("4-1","4")
+    "　　　　　" || [_科目名称_] AS [_项目_],
+    [_账面价值_]/10000 AS [_账面价值_],
+    [评估价值_]/10000 AS [评估价值_],
+    ([评估价值_]-[_账面价值_])/10000 AS [增减值_],
+    ([评估价值_]-[_账面价值_])/[_账面价值_] AS [增值率_],
+    [_账面价值_]+[评估价值_] AS [小计]
+    FROM [表4-sum] WHERE [表4-sum].[_编号_]!="4-1"
 UNION ALL
 SELECT
-"资产总计" AS [_项目_],
-[_账面价值_],[评估价值_],[增减值_]
-FROM [表2] WHERE [表2].[_科目名称_]="三、资产总计"
+    "资产总计" AS [_项目_],
+    [_账面价值_]/10000 AS [_账面价值_],
+    [评估价值_]/10000 AS [评估价值_],
+    ([评估价值_]-[_账面价值_])/10000 AS [增减值_],
+    ([评估价值_]-[_账面价值_])/[_账面价值_] AS [增值率_],
+    [_账面价值_]+[评估价值_] AS [小计]
+FROM [表2-asset-sub]
 UNION ALL
 SELECT
-"流动负债" AS [_项目_],
-[_账面价值_],[评估价值_],[增减值_]
-FROM [表2] WHERE [表2].[_科目名称_]="四、流动负债合计"
+    "流动负债" AS [_项目_],
+    [_账面价值_]/10000 AS [_账面价值_],
+    [评估价值_]/10000 AS [评估价值_],
+    ([评估价值_]-[_账面价值_])/10000 AS [增减值_],
+    ([评估价值_]-[_账面价值_])/[_账面价值_] AS [增值率_],
+    [_账面价值_]+[评估价值_] AS [小计]
+FROM [表5-tot]
 UNION ALL
 SELECT
-"非流动负债" AS [_项目_],
-[_账面价值_],[评估价值_],[增减值_]
-FROM [表2] WHERE [表2].[_科目名称_]="五、非流动负债合计"
+    "非流动负债" AS [_项目_],
+    [_账面价值_]/10000 AS [_账面价值_],
+    [评估价值_]/10000 AS [评估价值_],
+    ([评估价值_]-[_账面价值_])/10000 AS [增减值_],
+    ([评估价值_]-[_账面价值_])/[_账面价值_] AS [增值率_],
+    [_账面价值_]+[评估价值_] AS [小计]
+FROM [表6-tot]
 UNION ALL
 SELECT
-"负债总计" AS [_项目_],
-[_账面价值_],[评估价值_],[增减值_]
-FROM [表2] WHERE [表2].[_科目名称_]="六、负债总计"
+    "负债总计" AS [_项目_],
+    [_账面价值_]/10000 AS [_账面价值_],
+    [评估价值_]/10000 AS [评估价值_],
+    ([评估价值_]-[_账面价值_])/10000 AS [增减值_],
+    ([评估价值_]-[_账面价值_])/[_账面价值_] AS [增值率_],
+    [_账面价值_]+[评估价值_] AS [小计]
+FROM [表2-debt-sub]
 UNION ALL
 SELECT
-"净资产（所有者权益）" AS [_项目_],
-[_账面价值_],[评估价值_],[增减值_]
-FROM [表2] WHERE [表2].[_科目名称_]="七、净资产"
+    "净资产（所有者权益）" AS [_项目_],
+    [_账面价值_]/10000 AS [_账面价值_],
+    [评估价值_]/10000 AS [评估价值_],
+    ([评估价值_]-[_账面价值_])/10000 AS [增减值_],
+    ([评估价值_]-[_账面价值_])/[_账面价值_] AS [增值率_],
+    [_账面价值_]+[评估价值_] AS [小计]
+FROM [表7] WHERE [表7].[_资产名称_]="所有者权益（净资产）合计"
 UNION ALL
-SELECT NULL, NULL, NULL, NULL
+SELECT NULL, NULL, NULL, NULL, NULL, NULL
 UNION ALL
 SELECT
-[_科目名称_] AS [_项目_],
-[_账面价值_],[评估价值_],[增减值_]
-FROM [表2] WHERE [表2].[_科目名称_]="平衡：资产总计-负债总计-净资产";''',
-    '表1 ': '''
-CREATE VIEW [表1] AS
-SELECT [_项目_],
-CASE WHEN [_账面价值_]=0 THEN NULL ELSE [_账面价值_]/10000 END AS [_账面价值_],
-CASE WHEN [评估价值_]=0 THEN NULL ELSE [评估价值_]/10000 END AS [评估价值_],
-CASE WHEN [增减值_]=0 THEN NULL ELSE [增减值_]/10000 END AS [增减值_],
-CASE WHEN [增减值_]=0 THEN NULL ELSE [增减值_]/[_账面价值_] END AS [增值率_]
-FROM [表1-tmp];''',
+    [_科目名称_] AS [_项目_],
+    [_账面价值_]/10000 AS [_账面价值_],
+    [评估价值_]/10000 AS [评估价值_],
+    ([评估价值_]-[_账面价值_])/10000 AS [增减值_],
+    ([评估价值_]-[_账面价值_])/[_账面价值_] AS [增值率_],
+    [_账面价值_]+[评估价值_] AS [小计]
+FROM [表2-balance];''',
 
+    # 缓存小计 表2-asset-sub
     '表2': '''
-CREATE VIEW [表2-asset] AS
-SELECT "三、资产总计" AS [_科目名称_],
-CASE WHEN [表3].[_账面价值_] IS NULL THEN 0 ELSE [表3].[_账面价值_] END + 
-CASE WHEN [表4].[_账面价值_] IS NULL THEN 0 ELSE [表4].[_账面价值_] END AS [_账面价值_],
-CASE WHEN [表3].[评估价值_] IS NULL THEN 0 ELSE [表3].[评估价值_] END + 
-CASE WHEN [表4].[评估价值_] IS NULL THEN 0 ELSE [表4].[评估价值_] END AS [评估价值_],
-CASE WHEN [表3].[增减值_] IS NULL THEN 0 ELSE [表3].[增减值_] END + 
-CASE WHEN [表4].[增减值_] IS NULL THEN 0 ELSE [表4].[增减值_] END AS [增减值_]
-FROM [表3],[表4] WHERE [表3].[_编号_]="3" AND [表4].[_编号_]="4";''',
+CREATE VIEW [表2-asset-sub] AS
+SELECT
+"三、资产总计" AS [_科目名称_],
+[表3-tot].[_账面价值_]+[表4-tot].[_账面价值_] AS [_账面价值_],
+[表3-tot].[评估价值_]+[表4-tot].[评估价值_] AS [评估价值_]
+FROM [表3-tot],[表4-tot];''',
+    # 缓存小计 表2-debt-sub
     '表2 ': '''
-CREATE VIEW [表2-debt] AS
-SELECT "六、负债总计" AS [_科目名称_],
-CASE WHEN [表5].[_账面价值_] IS NULL THEN 0 ELSE [表5].[_账面价值_] END + 
-CASE WHEN [表6].[_账面价值_] IS NULL THEN 0 ELSE [表6].[_账面价值_] END AS [_账面价值_],
-CASE WHEN [表5].[评估价值_] IS NULL THEN 0 ELSE [表5].[评估价值_] END + 
-CASE WHEN [表6].[评估价值_] IS NULL THEN 0 ELSE [表6].[评估价值_] END AS [评估价值_],
-CASE WHEN [表5].[增减值_] IS NULL THEN 0 ELSE [表5].[增减值_] END + 
-CASE WHEN [表6].[增减值_] IS NULL THEN 0 ELSE [表6].[增减值_] END AS [增减值_]
-FROM [表5],[表6] WHERE [表5].[_编号_]="5" AND [表6].[_编号_]="6";''',
-
+CREATE VIEW [表2-debt-sub] AS
+SELECT
+"六、负债总计" AS [_科目名称_],
+[表5-tot].[_账面价值_]+[表6-tot].[_账面价值_] AS [_账面价值_],
+[表5-tot].[评估价值_]+[表6-tot].[评估价值_] AS [评估价值_]
+FROM [表5-tot],[表6-tot];''',
+    # 缓存小计 表2-equity-sub
     '表2  ': '''
-CREATE VIEW [表2-equity] AS
-SELECT "七、净资产" AS [_科目名称_],[_账面价值_],[评估价值_],[增减值_]
+CREATE VIEW [表2-equity-sub] AS
+SELECT
+"七、净资产" AS [_科目名称_],
+[_账面价值_],
+[评估价值_]
 FROM [表7] WHERE [表7].[_资产名称_]="所有者权益（净资产）合计";''',
-
+    # 缓存平衡 表2-balance
     '表2   ': '''
 CREATE VIEW [表2-balance] AS
-SELECT "平衡：资产总计-负债总计-净资产" AS "_科目名称_",
-[表2-asset].[_账面价值_]-[表2-debt].[_账面价值_]-
-CASE WHEN [表2-equity].[_账面价值_] IS NULL THEN 0 ELSE [表2-equity].[_账面价值_] END AS [_账面价值_],
-[表2-asset].[评估价值_]-[表2-debt].[评估价值_]-
-CASE WHEN [表2-equity].[评估价值_] IS NULL THEN 0 ELSE [表2-equity].[评估价值_] END AS [评估价值_],
-[表2-asset].[增减值_]-[表2-debt].[增减值_]-
-CASE WHEN [表2-equity].[增减值_] IS NULL THEN 0 ELSE [表2-equity].[增减值_] END AS [增减值_]
-FROM [表2-asset],[表2-debt],[表2-equity];''',
+SELECT
+    "平衡：资产总计-负债总计-净资产" AS "_科目名称_",
+    [表2-asset-sub].[_账面价值_]-[表2-debt-sub].[_账面价值_]-
+    CASE WHEN [表2-equity-sub].[_账面价值_] IS NULL THEN 0
+    ELSE [表2-equity-sub].[_账面价值_] END AS [_账面价值_],
+    [表2-asset-sub].[评估价值_]-[表2-debt-sub].[评估价值_]-
+    CASE WHEN [表2-equity-sub].[评估价值_] IS NULL THEN 0
+    ELSE [表2-equity-sub].[评估价值_] END AS [评估价值_]
+FROM [表2-asset-sub],[表2-debt-sub],[表2-equity-sub];''',
+    # 创建视图 表2
     '表2    ': '''
 CREATE VIEW [表2] AS
-SELECT "一、流动资产合计" AS [_科目名称_],
-[_账面价值_],[评估价值_],[增减值_],
-[增减值_]/[_账面价值_] AS [增值率_]
-FROM [表3] WHERE [表3].[_编号_]="3"
+SELECT
+    "一、流动资产合计" AS [_科目名称_],
+    [_账面价值_],
+    [评估价值_],
+    [评估价值_]-[_账面价值_] AS [增减值_],
+    ([评估价值_]-[_账面价值_])/[_账面价值_] AS [增值率_],
+    [_账面价值_]+[评估价值_] AS [小计]
+FROM [表3-tot]
 UNION ALL
-SELECT "　　"||[_科目名称_] AS [_科目名称_],
-[_账面价值_],[评估价值_],[增减值_],
-[增减值_]/[_账面价值_] AS [增值率_]
-FROM [表3] WHERE [表3].[_编号_]!="3"
+SELECT
+    "　　"||[_科目名称_] AS [_科目名称_],
+    [_账面价值_],
+    [评估价值_],
+    [评估价值_]-[_账面价值_] AS [增减值_],
+    ([评估价值_]-[_账面价值_])/[_账面价值_] AS [增值率_],
+    [_账面价值_]+[评估价值_] AS [小计]
+FROM [表3-sum]
 UNION ALL
-SELECT "二、非流动资产合计" AS [_科目名称_],
-[_账面价值_],[评估价值_],[增减值_],
-[增减值_]/[_账面价值_] AS [增值率_]
-FROM [表4] WHERE [表4].[_编号_]="4"
+SELECT
+    "二、非流动资产合计" AS [_科目名称_],
+    [_账面价值_],
+    [评估价值_],
+    [评估价值_]-[_账面价值_] AS [增减值_],
+    ([评估价值_]-[_账面价值_])/[_账面价值_] AS [增值率_],
+    [_账面价值_]+[评估价值_] AS [小计]
+FROM [表4-tot]
 UNION ALL
-SELECT "　　"||[_科目名称_] AS [_科目名称_],
-[_账面价值_],[评估价值_],[增减值_],
-[增减值_]/[_账面价值_] AS [增值率_]
-FROM [表4] WHERE [表4].[_编号_]!="4"
+SELECT
+    "　　"||[_科目名称_] AS [_科目名称_],
+    [_账面价值_],
+    [评估价值_],
+    [评估价值_]-[_账面价值_] AS [增减值_],
+    ([评估价值_]-[_账面价值_])/[_账面价值_] AS [增值率_],
+    [_账面价值_]+[评估价值_] AS [小计]
+FROM [表4-sum]
 UNION ALL
-SELECT [_科目名称_],
-CASE WHEN [_账面价值_]=0 THEN NULL ELSE [_账面价值_] END AS [_账面价值_],
-CASE WHEN [评估价值_]=0 THEN NULL ELSE [评估价值_] END AS [评估价值_],
-CASE WHEN [增减值_]=0 THEN NULL ELSE [增减值_] END AS [增减值_],
-[增减值_]/[_账面价值_] AS [增值率_]
-FROM [表2-asset]
+SELECT
+    [_科目名称_],
+    [_账面价值_],
+    [评估价值_],
+    [评估价值_]-[_账面价值_] AS [增减值_],
+    ([评估价值_]-[_账面价值_])/[_账面价值_] AS [增值率_],
+    [_账面价值_]+[评估价值_] AS [小计]
+FROM [表2-asset-sub]
 UNION ALL
-SELECT "四、流动负债合计" AS [_科目名称_],
-[_账面价值_],[评估价值_],[增减值_],
-[增减值_]/[_账面价值_] AS [增值率_]
-FROM [表5] WHERE [表5].[_编号_]="5"
+SELECT
+    "四、流动负债合计" AS [_科目名称_],
+    [_账面价值_],
+    [评估价值_],
+    [评估价值_]-[_账面价值_] AS [增减值_],
+    ([评估价值_]-[_账面价值_])/[_账面价值_] AS [增值率_],
+    [_账面价值_]+[评估价值_] AS [小计]
+FROM [表5-tot]
 UNION ALL
-SELECT "　　"||[_科目名称_] AS [_科目名称_],
-[_账面价值_],[评估价值_],[增减值_],
-[增减值_]/[_账面价值_] AS [增值率_]
-FROM [表5] WHERE [表5].[_编号_]!="5"
+SELECT
+    "　　"||[_科目名称_] AS [_科目名称_],
+    [_账面价值_],
+    [评估价值_],
+    [评估价值_]-[_账面价值_] AS [增减值_],
+    ([评估价值_]-[_账面价值_])/[_账面价值_] AS [增值率_],
+    [_账面价值_]+[评估价值_] AS [小计]
+FROM [表5-sum]
 UNION ALL
-SELECT "五、非流动负债合计" AS [_科目名称_],
-[_账面价值_],[评估价值_],[增减值_],
-[增减值_]/[_账面价值_] AS [增值率_]
-FROM [表6] WHERE [表6].[_编号_]="6"
+SELECT
+    "五、非流动负债合计" AS [_科目名称_],
+    [_账面价值_],
+    [评估价值_],
+    [评估价值_]-[_账面价值_] AS [增减值_],
+    ([评估价值_]-[_账面价值_])/[_账面价值_] AS [增值率_],
+    [_账面价值_]+[评估价值_] AS [小计]
+FROM [表6-tot]
 UNION ALL
-SELECT "　　"||[_科目名称_] AS [_科目名称_],
-[_账面价值_],[评估价值_],[增减值_],
-[增减值_]/[_账面价值_] AS [增值率_]
-FROM [表6] WHERE [表6].[_编号_]!="6"
+SELECT
+    "　　"||[_科目名称_] AS [_科目名称_],
+    [_账面价值_],
+    [评估价值_],
+    [评估价值_]-[_账面价值_] AS [增减值_],
+    ([评估价值_]-[_账面价值_])/[_账面价值_] AS [增值率_],
+    [_账面价值_]+[评估价值_] AS [小计]
+FROM [表6-sum]
 UNION ALL
-SELECT [_科目名称_],
-CASE WHEN [_账面价值_]=0 THEN NULL ELSE [_账面价值_] END AS [_账面价值_],
-CASE WHEN [评估价值_]=0 THEN NULL ELSE [评估价值_] END AS [评估价值_],
-CASE WHEN [增减值_]=0 THEN NULL ELSE [增减值_] END AS [增减值_],
-[增减值_]/[_账面价值_] AS [增值率_]
-FROM [表2-debt]
+SELECT
+    [_科目名称_],
+    [_账面价值_],
+    [评估价值_],
+    [评估价值_]-[_账面价值_] AS [增减值_],
+    ([评估价值_]-[_账面价值_])/[_账面价值_] AS [增值率_],
+    [_账面价值_]+[评估价值_] AS [小计]
+FROM [表2-debt-sub]
 UNION ALL
-SELECT [_科目名称_],[_账面价值_],[评估价值_],[增减值_],
-[增减值_]/[_账面价值_] AS [增值率_]
-FROM [表2-equity]
+SELECT
+    [_科目名称_],
+    [_账面价值_],
+    [评估价值_],
+    [评估价值_]-[_账面价值_] AS [增减值_],
+    ([评估价值_]-[_账面价值_])/[_账面价值_] AS [增值率_],
+    [_账面价值_]+[评估价值_] AS [小计]
+FROM [表2-equity-sub]
 UNION ALL
-SELECT NULL, NULL, NULL, NULL, NULL
+SELECT NULL,NULL,NULL,NULL,NULL,NULL
 UNION ALL
-SELECT [_科目名称_],
-CASE WHEN [_账面价值_]=0 THEN NULL ELSE [_账面价值_] END AS [_账面价值_],
-CASE WHEN [评估价值_]=0 THEN NULL ELSE [评估价值_] END AS [评估价值_],
-NULL AS [增减值_],NULL AS [增值率_]
+SELECT
+    [_科目名称_],
+    [_账面价值_],
+    [评估价值_],
+    [评估价值_]-[_账面价值_] AS [增减值_],
+    ([评估价值_]-[_账面价值_])/[_账面价值_] AS [增值率_],
+    [_账面价值_]+[评估价值_] AS [小计]
 FROM [表2-balance];''',
 
     # 缓存汇总 表3-sum
@@ -585,116 +663,72 @@ SELECT
     CASE WHEN sum([评估价值_]) IS NULL THEN 0 ELSE sum([评估价值_]) END AS [评估价值_]
 FROM [表3-11];''',
 
+    # 缓存汇总 表4-sum
     '表4': '''
 CREATE VIEW [表4-sum] AS
-SELECT [_编号_], [_科目名称_],
-CASE WHEN [_账面价值_]=0 THEN NULL ELSE [_账面价值_] END AS [_账面价值_],
-CASE WHEN [评估价值_]=0 THEN NULL ELSE [评估价值_] END AS [评估价值_],
-CASE WHEN [增减值_]=0 THEN NULL ELSE [增减值_] END AS [增减值_],
-[增减值_]/[_账面价值_] AS [增值率_]
-FROM [表4-1-tmp]
+SELECT [_编号_],[_科目名称_],[_账面价值_],[评估价值_] FROM [表4-1-tot]
 UNION ALL
-SELECT [_编号_], [_科目名称_], [_账面价值_], [评估价值_],
-CASE WHEN [增减值_]=0 THEN NULL ELSE [增减值_] END AS [增减值_],
-[增减值_]/[_账面价值_] AS [增值率_]
-FROM [表4-2-tmp]
+SELECT [_编号_],[_科目名称_],[_账面价值_],[评估价值_] FROM [表4-2-tot]
 UNION ALL
-SELECT [_编号_], [_科目名称_], [_账面价值_], [评估价值_],
-CASE WHEN [增减值_]=0 THEN NULL ELSE [增减值_] END AS [增减值_],
-[增减值_]/[_账面价值_] AS [增值率_]
-FROM [表4-3-tmp]
+SELECT [_编号_],[_科目名称_],[_账面价值_],[评估价值_] FROM [表4-3-tot]
 UNION ALL
-SELECT [_编号_], [_科目名称_], [_账面价值_], [评估价值_],
-CASE WHEN [增减值_]=0 THEN NULL ELSE [增减值_] END AS [增减值_],
-[增减值_]/[_账面价值_] AS [增值率_]
-FROM [表4-4-tmp]
+SELECT [_编号_],[_科目名称_],[_账面价值_],[评估价值_] FROM [表4-4-tot]
 UNION ALL
-SELECT [_编号_], [_科目名称_],
-CASE WHEN [_账面价值_]=0 THEN NULL ELSE [_账面价值_] END AS [_账面价值_],
-CASE WHEN [评估价值_]=0 THEN NULL ELSE [评估价值_] END AS [评估价值_],
-CASE WHEN [增减值_]=0 THEN NULL ELSE [增减值_] END AS [增减值_],
-[增减值_]/[_账面价值_] AS [增值率_]
-FROM [表4-5-tmp]
+SELECT [_编号_],[_科目名称_],[_账面价值_],[评估价值_] FROM [表4-5-tot]
 UNION ALL
-SELECT [_编号_], [_科目名称_],
-CASE WHEN [_账面净值_]=0 THEN NULL ELSE [_账面净值_] END AS [_账面价值_],
-CASE WHEN [评估净值_]=0 THEN NULL ELSE [评估净值_] END AS [评估价值_],
-CASE WHEN [净值增值额_]=0 THEN NULL ELSE [净值增值额_] END AS [增减值_],
-[净值增值额_]/[_账面净值_] AS [增值率_]
-FROM [表4-6-tmp]
+SELECT [_编号_],[_科目名称_],[_账面净值_] AS [_账面价值_],[评估净值_] AS [评估价值_] FROM [表4-6-tot]
 UNION ALL
-SELECT [_编号_], [_科目名称_], [_账面价值_], [评估价值_],
-CASE WHEN [增减值_]=0 THEN NULL ELSE [增减值_] END AS [增减值_],
-[增减值_]/[_账面价值_] AS [增值率_]
-FROM [表4-7-tmp]
+SELECT [_编号_],[_科目名称_],[_账面价值_],[评估价值_] FROM [表4-7-tot]
 UNION ALL
-SELECT [_编号_], [_科目名称_], [_账面价值_], [评估价值_],
-CASE WHEN [增减值_]=0 THEN NULL ELSE [增减值_] END AS [增减值_],
-[增减值_]/[_账面价值_] AS [增值率_]
-FROM [表4-8-tmp]
+SELECT [_编号_],[_科目名称_],[_账面价值_],[评估价值_] FROM [表4-8-tot]
 UNION ALL
-SELECT [_编号_], [_科目名称_], [_账面价值_], [评估价值_],
-CASE WHEN [增减值_]=0 THEN NULL ELSE [增减值_] END AS [增减值_],
-[增减值_]/[_账面价值_] AS [增值率_]
-FROM [表4-9-tot]
+SELECT [_编号_],[_科目名称_],[_账面价值_],[评估价值_] FROM [表4-9-tot]
 UNION ALL
-SELECT [_编号_], [_科目名称_], [_账面价值_], [评估价值_],
-CASE WHEN [增减值_]=0 THEN NULL ELSE [增减值_] END AS [增减值_],
-[增减值_]/[_账面价值_] AS [增值率_]
-FROM [表4-10-tmp]
+SELECT [_编号_],[_科目名称_],[_账面价值_],[评估价值_] FROM [表4-10-tot]
 UNION ALL
-SELECT [_编号_], [_科目名称_], [_账面价值_], [评估价值_],
-CASE WHEN [增减值_]=0 THEN NULL ELSE [增减值_] END AS [增减值_],
-[增减值_]/[_账面价值_] AS [增值率_]
-FROM [表4-11-tmp]
+SELECT [_编号_],[_科目名称_],[_账面价值_],[评估价值_] FROM [表4-11-tot]
 UNION ALL
-SELECT [_编号_], [_科目名称_], [_账面价值_], [评估价值_],
-CASE WHEN [增减值_]=0 THEN NULL ELSE [增减值_] END AS [增减值_],
-[增减值_]/[_账面价值_] AS [增值率_]
-FROM [表4-12-tmp]
+SELECT [_编号_],[_科目名称_],[_账面价值_],[评估价值_] FROM [表4-12-tot]
 UNION ALL
-SELECT [_编号_], [_科目名称_], [_账面价值_], [评估价值_],
-CASE WHEN [增减值_]=0 THEN NULL ELSE [增减值_] END AS [增减值_],
-[增减值_]/[_账面价值_] AS [增值率_]
-FROM [表4-13-tot]
+SELECT [_编号_],[_科目名称_],[_账面价值_],[评估价值_] FROM [表4-13-tot]
 UNION ALL
-SELECT [_编号_], [_科目名称_], [_账面价值_], [评估价值_],
-CASE WHEN [增减值_]=0 THEN NULL ELSE [增减值_] END AS [增减值_],
-[增减值_]/[_账面价值_] AS [增值率_]
-FROM [表4-14-tmp]
+SELECT [_编号_],[_科目名称_],[_账面价值_],[评估价值_] FROM [表4-14-tot]
 UNION ALL
-SELECT [_编号_], [_科目名称_], [_账面价值_], [评估价值_],
-CASE WHEN [增减值_]=0 THEN NULL ELSE [增减值_] END AS [增减值_],
-[增减值_]/[_账面价值_] AS [增值率_]
-FROM [表4-15-tot]
+SELECT [_编号_],[_科目名称_],[_账面价值_],[评估价值_] FROM [表4-15-tot]
 UNION ALL
-SELECT [_编号_], [_科目名称_], [_账面价值_], [评估价值_],
-CASE WHEN [增减值_]=0 THEN NULL ELSE [增减值_] END AS [增减值_],
-[增减值_]/[_账面价值_] AS [增值率_]
-FROM [表4-16-tot]
+SELECT [_编号_],[_科目名称_],[_账面价值_],[评估价值_] FROM [表4-16-tot]
 UNION ALL
-SELECT [_编号_], [_科目名称_], [_账面价值_], [评估价值_],
-CASE WHEN [增减值_]=0 THEN NULL ELSE [增减值_] END AS [增减值_],
-[增减值_]/[_账面价值_] AS [增值率_]
-FROM [表4-17-tot];''',
-
+SELECT [_编号_],[_科目名称_],[_账面价值_],[评估价值_] FROM [表4-17-tot];''',
+    # 缓存合计 表4-tot
     '表4 ': '''
 CREATE VIEW [表4-tot] AS
-SELECT "4" AS [_编号_], "非流动资产合计" AS [_科目名称_],
-sum([_账面价值_]) AS [_账面价值_],
-sum([评估价值_]) AS [评估价值_],
-sum([增减值_]) AS [增减值_]
+SELECT
+    "4" AS [_编号_],
+    "非流动资产合计" AS [_科目名称_],
+    sum([_账面价值_]) AS [_账面价值_],
+    sum([评估价值_]) AS [评估价值_]
 FROM [表4-sum];''',
+    # 创建视图 表4
     '表4  ': '''
 CREATE VIEW [表4] AS
-SELECT [_编号_], [_科目名称_], [_账面价值_], [评估价值_],
-CASE WHEN [增减值_]=0 THEN NULL ELSE [增减值_] END AS [增减值_],
-[增减值_]/[_账面价值_] AS [增值率_]
+SELECT
+    [_编号_],
+    [_科目名称_],
+    [_账面价值_],
+    [评估价值_],
+    [评估价值_]-[_账面价值_] AS [增减值_],
+    ([评估价值_]-[_账面价值_])/[_账面价值_] AS [增值率_],
+    [_账面价值_]+[评估价值_] AS [小计]
 FROM [表4-sum]
 UNION ALL
-SELECT [_编号_], [_科目名称_], [_账面价值_], [评估价值_],
-CASE WHEN [_账面价值_] IS NULL AND [评估价值_] IS NULL THEN NULL ELSE [增减值_] END AS [增减值_],
-[增减值_]/[_账面价值_] AS [增值率_]
+SELECT
+    [_编号_],
+    [_科目名称_],
+    [_账面价值_],
+    [评估价值_],
+    [评估价值_]-[_账面价值_] AS [增减值_],
+    ([评估价值_]-[_账面价值_])/[_账面价值_] AS [增值率_],
+    [_账面价值_]+[评估价值_] AS [小计]
 FROM [表4-tot];''',
 
     # 缓存小计 表4-1-1-sub
@@ -1418,7 +1452,7 @@ SELECT
     CASE WHEN sum([_账面净值_]) IS NULL THEN 0 ELSE sum([_账面净值_]) END AS [_账面价值_],
     CASE WHEN sum([评估净值_]) IS NULL THEN 0 ELSE sum([评估净值_]) END AS [评估价值_]
 FROM [表4-10];''',
-    # 缓存小计 表4-10-tot
+    # 缓存合计 表4-10-tot
     '表4-10 ': '''
 CREATE VIEW [表4-10-tot] AS
 SELECT
@@ -1431,292 +1465,376 @@ SELECT
 FROM [表4-10-sub],[表8]
 WHERE [表4-10-sub].[_科目名称_]="生产性生物资产合计" AND [表8].[_科目名称_]="十一、生产性生物资产减值准备";''',
 
+    # 缓存小计 表4-11-sub
     '表4-11': '''
-CREATE VIEW [表4-11-tot] AS
-SELECT "" AS [_编号_], "油气资产合计" AS [_科目名称_],
-sum([_账面净值_]) AS [_账面价值_],
-sum([评估净值_]) AS [评估价值_],
-CASE WHEN sum([_账面净值_]) IS NULL AND sum([评估净值_]) IS NULL THEN NULL
-WHEN sum([_账面净值_]) IS NULL THEN sum([评估净值_])
-WHEN sum([评估净值_]) IS NULL THEN -sum([_账面净值_])
-ELSE sum([评估净值_])-sum([_账面净值_]) END AS [增减值_]
+CREATE VIEW [表4-11-sub] AS
+SELECT
+"" AS [_编号_],
+"油气资产合计" AS [_科目名称_],
+    CASE WHEN sum([_账面净值_]) IS NULL THEN 0 ELSE sum([_账面净值_]) END AS [_账面价值_],
+    CASE WHEN sum([评估净值_]) IS NULL THEN 0 ELSE sum([评估净值_]) END AS [评估价值_]
 FROM [表4-11];''',
+    # 缓存合计 表4-11-tot
     '表4-11 ': '''
-CREATE VIEW [表4-11-tmp] AS
-SELECT "4-11" AS [_编号_], "油气资产净额" AS [_科目名称_],
-[表4-11-tot].[_账面价值_] - CASE WHEN [表8].[_账面价值_] IS NULL THEN 0 ELSE [表8].[_账面价值_] END AS [_账面价值_],
-[表4-11-tot].[评估价值_] - CASE WHEN [表8].[评估价值_] IS NULL THEN 0 ELSE [表8].[评估价值_] END AS [评估价值_],
-[表4-11-tot].[增减值_] - CASE WHEN [表8].[增减值_] IS NULL THEN 0 ELSE [表8].[增减值_] END AS [增减值_]
-FROM [表4-11-tot],[表8]
-WHERE [表4-11-tot].[_科目名称_]="油气资产合计" AND [表8].[_科目名称_]="十二、油气资产减值准备";''',
+CREATE VIEW [表4-11-tot] AS
+SELECT
+    "4-11" AS [_编号_],
+    "油气资产净额" AS [_科目名称_],
+    CASE WHEN [表8].[_账面价值_] IS NULL THEN [表4-11-sub].[_账面价值_]
+    ELSE [表4-11-sub].[_账面价值_]-[表8].[_账面价值_] END AS [_账面价值_],
+    CASE WHEN [表8].[评估价值_] IS NULL THEN [表4-11-sub].[评估价值_]
+    ELSE [表4-11-sub].[评估价值_]-[表8].[评估价值_] END AS [评估价值_]
+FROM [表4-11-sub],[表8]
+WHERE [表4-11-sub].[_科目名称_]="油气资产合计" AND [表8].[_科目名称_]="十二、油气资产减值准备";''',
 
+    # 缓存汇总 表4-12-sum
     '表4-12': '''
 CREATE VIEW [表4-12-sum] AS
-SELECT "4-12-1" AS [_编号_], "无形资产—土地使用权" AS [_科目名称_],
-sum([_账面价值_]) AS [_账面价值_],
-sum([评估价值_]) AS [评估价值_],
-CASE WHEN sum([评估价值_]) IS NULL THEN 0 ELSE sum([评估价值_]) END -
-CASE WHEN sum([_账面价值_]) IS NULL THEN 0 ELSE sum([_账面价值_]) END AS [增减值_]
+SELECT
+    "4-12-1" AS [_编号_],
+    "无形资产—土地使用权" AS [_科目名称_],
+    CASE WHEN sum([_账面价值_]) IS NULL THEN 0 ELSE sum([_账面价值_]) END AS [_账面价值_],
+    CASE WHEN sum([评估价值_]) IS NULL THEN 0 ELSE sum([评估价值_]) END AS [评估价值_]
 FROM [表4-12-1]
 UNION ALL
-SELECT "4-12-2" AS [_编号_], "无形资产—矿业权" AS [_科目名称_],
-sum([_账面价值_]) AS [_账面价值_],
-sum([评估价值_]) AS [评估价值_],
-CASE WHEN sum([评估价值_]) IS NULL THEN 0 ELSE sum([评估价值_]) END -
-CASE WHEN sum([_账面价值_]) IS NULL THEN 0 ELSE sum([_账面价值_]) END AS [增减值_]
+SELECT
+    "4-12-2" AS [_编号_],
+    "无形资产—矿业权" AS [_科目名称_],
+    CASE WHEN sum([_账面价值_]) IS NULL THEN 0 ELSE sum([_账面价值_]) END AS [_账面价值_],
+    CASE WHEN sum([评估价值_]) IS NULL THEN 0 ELSE sum([评估价值_]) END AS [评估价值_]
 FROM [表4-12-2]
 UNION ALL
-SELECT "4-12-3" AS [_编号_], "无形资产—其他无形资产" AS [_科目名称_],
-sum([_账面价值_]) AS [_账面价值_],
-sum([评估价值_]) AS [评估价值_],
-CASE WHEN sum([评估价值_]) IS NULL THEN 0 ELSE sum([评估价值_]) END -
-CASE WHEN sum([_账面价值_]) IS NULL THEN 0 ELSE sum([_账面价值_]) END AS [增减值_]
+SELECT
+    "4-12-3" AS [_编号_],
+    "无形资产—其他无形资产" AS [_科目名称_],
+    CASE WHEN sum([_账面价值_]) IS NULL THEN 0 ELSE sum([_账面价值_]) END AS [_账面价值_],
+    CASE WHEN sum([评估价值_]) IS NULL THEN 0 ELSE sum([评估价值_]) END AS [评估价值_]
 FROM [表4-12-3];''',
+    # 缓存小计 表4-12-sub
     '表4-12 ': '''
-CREATE VIEW [表4-12-tot] AS
-SELECT "" AS [_编号_], "无形资产合计" AS [_科目名称_],
-sum([_账面价值_]) AS [_账面价值_],
-sum([评估价值_]) AS [评估价值_],
-sum([增减值_]) AS [增减值_]
+CREATE VIEW [表4-12-sub] AS
+SELECT
+    "" AS [_编号_],
+    "无形资产合计" AS [_科目名称_],
+    sum([_账面价值_]) AS [_账面价值_],
+    sum([评估价值_]) AS [评估价值_]
 FROM [表4-12-sum];''',
+    # 缓存合计 表4-12-tot
     '表4-12  ': '''
-CREATE VIEW [表4-12-tmp] AS
-SELECT "4-12" AS [_编号_], "无形资产净额" AS [_科目名称_],
-[表4-12-tot].[_账面价值_] - CASE WHEN [表8].[_账面价值_] IS NULL THEN 0 ELSE [表8].[_账面价值_] END AS [_账面价值_],
-[表4-12-tot].[评估价值_] - CASE WHEN [表8].[评估价值_] IS NULL THEN 0 ELSE [表8].[评估价值_] END AS [评估价值_],
-[表4-12-tot].[增减值_] - CASE WHEN [表8].[增减值_] IS NULL THEN 0 ELSE [表8].[增减值_] END AS [增减值_]
-FROM [表4-12-tot],[表8]
-WHERE [表4-12-tot].[_科目名称_]="无形资产合计" AND [表8].[_科目名称_]="十三、无形资产减值准备";''',
+CREATE VIEW [表4-12-tot] AS
+SELECT
+    "4-12" AS [_编号_],
+    "无形资产净额" AS [_科目名称_],
+    CASE WHEN [表8].[_账面价值_] IS NULL THEN [表4-12-sub].[_账面价值_]
+    ELSE [表4-12-sub].[_账面价值_]-[表8].[_账面价值_] END AS [_账面价值_],
+    CASE WHEN [表8].[评估价值_] IS NULL THEN [表4-12-sub].[评估价值_]
+    ELSE [表4-12-sub].[评估价值_]-[表8].[评估价值_] END AS [评估价值_]
+FROM [表4-12-sub],[表8]
+WHERE [表4-12-sub].[_科目名称_]="无形资产合计" AND [表8].[_科目名称_]="十三、无形资产减值准备";''',
+    # 创建视图 表4-12
     '表4-12   ': '''
 CREATE VIEW [表4-12] AS
-SELECT [_编号_], [_科目名称_], [_账面价值_], [评估价值_],
-CASE WHEN [增减值_]=0 THEN NULL ELSE [增减值_] END AS [增减值_],
-[增减值_]/[_账面价值_] AS [增值率_]
+SELECT
+    [_编号_],
+    [_科目名称_],
+    [_账面价值_],
+    [评估价值_],
+    [评估价值_]-[_账面价值_] AS [增减值_],
+    ([评估价值_]-[_账面价值_])/[_账面价值_] AS [增值率_],
+    [_账面价值_]+[评估价值_] AS [小计]
 FROM [表4-12-sum]
 UNION ALL
-SELECT [_编号_], [_科目名称_], [_账面价值_], [评估价值_],
-CASE WHEN [_账面价值_] IS NULL AND [评估价值_] IS NULL THEN NULL ELSE [增减值_] END AS [增减值_],
-[增减值_]/[_账面价值_] AS [增值率_]
-FROM [表4-12-tot]
+SELECT
+    [_编号_],
+    [_科目名称_],
+    [_账面价值_],
+    [评估价值_],
+    [评估价值_]-[_账面价值_] AS [增减值_],
+    ([评估价值_]-[_账面价值_])/[_账面价值_] AS [增值率_],
+    [_账面价值_]+[评估价值_] AS [小计]
+FROM [表4-12-sub]
 UNION ALL
-SELECT "" AS [_编号_], "　　减：无形资产减值准备" AS [_科目名称_],
-CASE WHEN [_账面价值_]=0 THEN NULL ELSE [_账面价值_] END AS [_账面价值_],
-CASE WHEN [评估价值_]=0 THEN NULL ELSE [评估价值_] END AS [评估价值_],
-CASE WHEN [_账面价值_]=0 AND [评估价值_]=0 THEN NULL ELSE [增减值_] END AS [增减值_],
-[增减值_]/[_账面价值_] AS [增值率_]
+SELECT
+"" AS [_编号_],
+"　　减：无形资产减值准备" AS [_科目名称_],
+    [_账面价值_],
+    [评估价值_],
+    [评估价值_]-[_账面价值_] AS [增减值_],
+    ([评估价值_]-[_账面价值_])/[_账面价值_] AS [增值率_],
+    [_账面价值_]+[评估价值_] AS [小计]
 FROM [表8]
 WHERE [表8].[_科目名称_]="十三、无形资产减值准备"
 UNION ALL
-SELECT [_编号_], [_科目名称_], [_账面价值_], [评估价值_],
-CASE WHEN [_账面价值_] IS NULL AND [评估价值_] IS NULL THEN NULL ELSE [增减值_] END AS [增减值_],
-[增减值_]/[_账面价值_] AS [增值率_]
-FROM [表4-12-tmp];''',
+SELECT
+    [_编号_],
+    [_科目名称_],
+    [_账面价值_],
+    [评估价值_],
+    [评估价值_]-[_账面价值_] AS [增减值_],
+    ([评估价值_]-[_账面价值_])/[_账面价值_] AS [增值率_],
+    [_账面价值_]+[评估价值_] AS [小计]
+FROM [表4-12-tot];''',
 
+    # 缓存合计 表4-13-tot
     '表4-13': '''
 CREATE VIEW [表4-13-tot] AS
-SELECT "4-13" AS [_编号_], "开发支出" AS [_科目名称_],
-sum([_账面价值_]) AS [_账面价值_],
-sum([评估价值_]) AS [评估价值_],
-sum([增减值_]) AS [增减值_]
+SELECT
+    "4-13" AS [_编号_],
+    "开发支出" AS [_科目名称_],
+    CASE WHEN sum([_账面价值_]) IS NULL THEN 0 ELSE sum([_账面价值_]) END AS [_账面价值_],
+    CASE WHEN sum([评估价值_]) IS NULL THEN 0 ELSE sum([评估价值_]) END AS [评估价值_]
 FROM [表4-13];''',
 
+    # 缓存小计 表4-14-sub
     '表4-14': '''
-CREATE VIEW [表4-14-tot] AS
-SELECT "" AS [_编号_], "商誉合计" AS [_科目名称_],
-sum([_账面价值_]) AS [_账面价值_],
-sum([评估价值_]) AS [评估价值_],
-sum([增减值_]) AS [增减值_]
+CREATE VIEW [表4-14-sub] AS
+SELECT
+    "" AS [_编号_],
+    "商誉合计" AS [_科目名称_],
+    CASE WHEN sum([_账面价值_]) IS NULL THEN 0 ELSE sum([_账面价值_]) END AS [_账面价值_],
+    CASE WHEN sum([评估价值_]) IS NULL THEN 0 ELSE sum([评估价值_]) END AS [评估价值_]
 FROM [表4-14];''',
+    # 缓存合计 表4-14-tot
     '表4-14 ': '''
-CREATE VIEW [表4-14-tmp] AS
-SELECT "4-14" AS [_编号_], "商誉净额" AS [_科目名称_],
-[表4-14-tot].[_账面价值_] - CASE WHEN [表8].[_账面价值_] IS NULL THEN 0 ELSE [表8].[_账面价值_] END AS [_账面价值_],
-[表4-14-tot].[评估价值_] - CASE WHEN [表8].[评估价值_] IS NULL THEN 0 ELSE [表8].[评估价值_] END AS [评估价值_],
-[表4-14-tot].[增减值_] - CASE WHEN [表8].[增减值_] IS NULL THEN 0 ELSE [表8].[增减值_] END AS [增减值_]
-FROM [表4-14-tot],[表8]
-WHERE [表4-14-tot].[_科目名称_]="商誉合计" AND [表8].[_科目名称_]="十四、商誉减值准备";''',
+CREATE VIEW [表4-14-tot] AS
+SELECT
+    "4-14" AS [_编号_],
+    "商誉净额" AS [_科目名称_],
+    CASE WHEN [表8].[_账面价值_] IS NULL THEN [表4-14-sub].[_账面价值_]
+    ELSE [表4-14-sub].[_账面价值_]-[表8].[_账面价值_] END AS [_账面价值_],
+    CASE WHEN [表8].[评估价值_] IS NULL THEN [表4-14-sub].[评估价值_]
+    ELSE [表4-14-sub].[评估价值_]-[表8].[评估价值_] END AS [评估价值_]
+FROM [表4-14-sub],[表8]
+WHERE [表4-14-sub].[_科目名称_]="商誉合计" AND [表8].[_科目名称_]="十四、商誉减值准备";''',
 
+    # 缓存合计 表4-15-tot
     '表4-15': '''
 CREATE VIEW [表4-15-tot] AS
-SELECT "4-15" AS [_编号_], "长期待摊费用" AS [_科目名称_],
-sum([_账面价值_]) AS [_账面价值_],
-sum([评估价值_]) AS [评估价值_],
-sum([增减值_]) AS [增减值_]
+SELECT
+    "4-15" AS [_编号_],
+    "长期待摊费用" AS [_科目名称_],
+    CASE WHEN sum([_账面价值_]) IS NULL THEN 0 ELSE sum([_账面价值_]) END AS [_账面价值_],
+    CASE WHEN sum([评估价值_]) IS NULL THEN 0 ELSE sum([评估价值_]) END AS [评估价值_]
 FROM [表4-15];''',
 
+    # 缓存合计 表4-16-tot
     '表4-16': '''
 CREATE VIEW [表4-16-tot] AS
-SELECT "4-16" AS [_编号_], "递延所得税资产" AS [_科目名称_],
-sum([_账面价值_]) AS [_账面价值_],
-sum([评估价值_]) AS [评估价值_],
-CASE WHEN sum([_账面价值_]) IS NULL AND sum([评估价值_]) IS NULL THEN NULL
-WHEN sum([_账面价值_]) IS NULL THEN sum([评估价值_])
-WHEN sum([评估价值_]) IS NULL THEN -sum([_账面价值_])
-ELSE sum([评估价值_])-sum([_账面价值_]) END AS [增减值_]
+SELECT
+    "4-16" AS [_编号_],
+    "递延所得税资产" AS [_科目名称_],
+    CASE WHEN sum([_账面价值_]) IS NULL THEN 0 ELSE sum([_账面价值_]) END AS [_账面价值_],
+    CASE WHEN sum([评估价值_]) IS NULL THEN 0 ELSE sum([评估价值_]) END AS [评估价值_]
 FROM [表4-16];''',
 
+    # 缓存合计 表4-17-tot
     '表4-17': '''
 CREATE VIEW [表4-17-tot] AS
-SELECT "4-17" AS [_编号_], "其他非流动资产" AS [_科目名称_],
-sum([_账面价值_]) AS [_账面价值_],
-sum([评估价值_]) AS [评估价值_],
-sum([增减值_]) AS [增减值_]
+SELECT
+    "4-17" AS [_编号_],
+    "其他非流动资产" AS [_科目名称_],
+    CASE WHEN sum([_账面价值_]) IS NULL THEN 0 ELSE sum([_账面价值_]) END AS [_账面价值_],
+    CASE WHEN sum([评估价值_]) IS NULL THEN 0 ELSE sum([评估价值_]) END AS [评估价值_]
 FROM [表4-17];''',
 
+    # 缓存汇总 表5-sum
     '表5': '''
 CREATE VIEW [表5-sum] AS
-SELECT "5-1" AS [_编号_], "短期借款" AS [_科目名称_],
-sum([_账面价值_]) AS [_账面价值_],
-sum([评估价值_]) AS [评估价值_]
+SELECT
+    "5-1" AS [_编号_],
+    "短期借款" AS [_科目名称_],
+    CASE WHEN sum([_账面价值_]) IS NULL THEN 0 ELSE sum([_账面价值_]) END AS [_账面价值_],
+    CASE WHEN sum([评估价值_]) IS NULL THEN 0 ELSE sum([评估价值_]) END AS [评估价值_]
 FROM [表5-1]
 UNION ALL
-SELECT "5-2" AS [_编号_], "交易性金融负债" AS [_科目名称_],
-sum([_账面价值_]) AS [_账面价值_],
-sum([评估价值_]) AS [评估价值_]
+SELECT
+    "5-2" AS [_编号_],
+    "交易性金融负债" AS [_科目名称_],
+    CASE WHEN sum([_账面价值_]) IS NULL THEN 0 ELSE sum([_账面价值_]) END AS [_账面价值_],
+    CASE WHEN sum([评估价值_]) IS NULL THEN 0 ELSE sum([评估价值_]) END AS [评估价值_]
 FROM [表5-2]
 UNION ALL
-SELECT "5-3" AS [_编号_], "应付票据" AS [_科目名称_],
-sum([_账面价值_]) AS [_账面价值_],
-sum([评估价值_]) AS [评估价值_]
+SELECT
+    "5-3" AS [_编号_],
+    "应付票据" AS [_科目名称_],
+    CASE WHEN sum([_账面价值_]) IS NULL THEN 0 ELSE sum([_账面价值_]) END AS [_账面价值_],
+    CASE WHEN sum([评估价值_]) IS NULL THEN 0 ELSE sum([评估价值_]) END AS [评估价值_]
 FROM [表5-3]
 UNION ALL
-SELECT "5-4" AS [_编号_], "应付账款" AS [_科目名称_],
-sum([_账面价值_]) AS [_账面价值_],
-sum([评估价值_]) AS [评估价值_]
+SELECT
+    "5-4" AS [_编号_],
+    "应付账款" AS [_科目名称_],
+    CASE WHEN sum([_账面价值_]) IS NULL THEN 0 ELSE sum([_账面价值_]) END AS [_账面价值_],
+    CASE WHEN sum([评估价值_]) IS NULL THEN 0 ELSE sum([评估价值_]) END AS [评估价值_]
 FROM [表5-4]
 UNION ALL
-SELECT "5-5" AS [_编号_], "预收账款" AS [_科目名称_],
-sum([_账面价值_]) AS [_账面价值_],
-sum([评估价值_]) AS [评估价值_]
+SELECT
+    "5-5" AS [_编号_],
+    "预收账款" AS [_科目名称_],
+    CASE WHEN sum([_账面价值_]) IS NULL THEN 0 ELSE sum([_账面价值_]) END AS [_账面价值_],
+    CASE WHEN sum([评估价值_]) IS NULL THEN 0 ELSE sum([评估价值_]) END AS [评估价值_]
 FROM [表5-5]
 UNION ALL
-SELECT "5-6" AS [_编号_], "应付职工薪酬" AS [_科目名称_],
-sum([_账面价值_]) AS [_账面价值_],
-sum([评估价值_]) AS [评估价值_]
+SELECT
+    "5-6" AS [_编号_],
+    "应付职工薪酬" AS [_科目名称_],
+    CASE WHEN sum([_账面价值_]) IS NULL THEN 0 ELSE sum([_账面价值_]) END AS [_账面价值_],
+    CASE WHEN sum([评估价值_]) IS NULL THEN 0 ELSE sum([评估价值_]) END AS [评估价值_]
 FROM [表5-6]
 UNION ALL
-SELECT "5-7" AS [_编号_], "应交税费" AS [_科目名称_],
-sum([_账面价值_]) AS [_账面价值_],
-sum([评估价值_]) AS [评估价值_]
+SELECT
+    "5-7" AS [_编号_],
+    "应交税费" AS [_科目名称_],
+    CASE WHEN sum([_账面价值_]) IS NULL THEN 0 ELSE sum([_账面价值_]) END AS [_账面价值_],
+    CASE WHEN sum([评估价值_]) IS NULL THEN 0 ELSE sum([评估价值_]) END AS [评估价值_]
 FROM [表5-7]
 UNION ALL
-SELECT "5-8" AS [_编号_], "应付利息" AS [_科目名称_],
-sum([_账面价值_]) AS [_账面价值_],
-sum([评估价值_]) AS [评估价值_]
+SELECT
+    "5-8" AS [_编号_],
+    "应付利息" AS [_科目名称_],
+    CASE WHEN sum([_账面价值_]) IS NULL THEN 0 ELSE sum([_账面价值_]) END AS [_账面价值_],
+    CASE WHEN sum([评估价值_]) IS NULL THEN 0 ELSE sum([评估价值_]) END AS [评估价值_]
 FROM [表5-8]
 UNION ALL
-SELECT "5-9" AS [_编号_], "应付股利（应付利润）" AS [_科目名称_],
-sum([_账面价值_]) AS [_账面价值_],
-sum([评估价值_]) AS [评估价值_]
+SELECT
+    "5-9" AS [_编号_],
+    "应付股利（应付利润）" AS [_科目名称_],
+    CASE WHEN sum([_账面价值_]) IS NULL THEN 0 ELSE sum([_账面价值_]) END AS [_账面价值_],
+    CASE WHEN sum([评估价值_]) IS NULL THEN 0 ELSE sum([评估价值_]) END AS [评估价值_]
 FROM [表5-9]
 UNION ALL
-SELECT "5-10" AS [_编号_], "其他应付款" AS [_科目名称_],
-sum([_账面价值_]) AS [_账面价值_],
-sum([评估价值_]) AS [评估价值_]
+SELECT
+    "5-10" AS [_编号_],
+    "其他应付款" AS [_科目名称_],
+    CASE WHEN sum([_账面价值_]) IS NULL THEN 0 ELSE sum([_账面价值_]) END AS [_账面价值_],
+    CASE WHEN sum([评估价值_]) IS NULL THEN 0 ELSE sum([评估价值_]) END AS [评估价值_]
 FROM [表5-10]
 UNION ALL
-SELECT "5-11" AS [_编号_], "一年内到期的非流动负债" AS [_科目名称_],
-sum([_账面价值_]) AS [_账面价值_],
-sum([评估价值_]) AS [评估价值_]
+SELECT
+    "5-11" AS [_编号_],
+    "一年内到期的非流动负债" AS [_科目名称_],
+    CASE WHEN sum([_账面价值_]) IS NULL THEN 0 ELSE sum([_账面价值_]) END AS [_账面价值_],
+    CASE WHEN sum([评估价值_]) IS NULL THEN 0 ELSE sum([评估价值_]) END AS [评估价值_]
 FROM [表5-11]
 UNION ALL
-SELECT "5-12" AS [_编号_], "其他流动负债" AS [_科目名称_],
-sum([_账面价值_]) AS [_账面价值_],
-sum([评估价值_]) AS [评估价值_]
+SELECT
+    "5-12" AS [_编号_],
+    "其他流动负债" AS [_科目名称_],
+    CASE WHEN sum([_账面价值_]) IS NULL THEN 0 ELSE sum([_账面价值_]) END AS [_账面价值_],
+    CASE WHEN sum([评估价值_]) IS NULL THEN 0 ELSE sum([评估价值_]) END AS [评估价值_]
 FROM [表5-12];''',
+    # 缓存合计 表5-tot
     '表5 ': '''
 CREATE VIEW [表5-tot] AS
-SELECT "5" AS [_编号_], "流动负债合计" AS [_科目名称_],
-sum([_账面价值_]) AS [_账面价值_],
-sum([评估价值_]) AS [评估价值_]
+SELECT
+    "5" AS [_编号_],
+    "流动负债合计" AS [_科目名称_],
+    sum([_账面价值_]) AS [_账面价值_],
+    sum([评估价值_]) AS [评估价值_]
 FROM [表5-sum];''',
+    # 创建视图 表5
     '表5  ': '''
 CREATE VIEW [表5] AS
-SELECT [_编号_],[_科目名称_],
-[_账面价值_],
-[评估价值_],
-CASE WHEN [_账面价值_] IS NULL AND [评估价值_] IS NULL THEN NULL
-WHEN [_账面价值_] IS NULL THEN [评估价值_]
-WHEN [评估价值_] IS NULL THEN -[_账面价值_] END AS [增减值_],
-CASE WHEN [_账面价值_] IS NULL THEN NULL
-WHEN [评估价值_] IS NULL THEN -1
-ELSE ([评估价值_]-[_账面价值_])/[_账面价值_] END AS [增值率_]
+SELECT
+    [_编号_],
+    [_科目名称_],
+    [_账面价值_],
+    [评估价值_],
+    [评估价值_]-[_账面价值_] AS [增减值_],
+    ([评估价值_]-[_账面价值_])/[_账面价值_] AS [增值率_],
+    [_账面价值_]+[评估价值_] AS [小计]
 FROM [表5-sum]
 UNION ALL
-SELECT [_编号_],[_科目名称_],
-[_账面价值_],
-[评估价值_],
-CASE WHEN [_账面价值_] IS NULL AND [评估价值_] IS NULL THEN NULL
-WHEN [_账面价值_] IS NULL THEN [评估价值_]
-WHEN [评估价值_] IS NULL THEN -[_账面价值_] END AS [增减值_],
-CASE WHEN [_账面价值_] IS NULL THEN NULL
-WHEN [评估价值_] IS NULL THEN -1
-ELSE ([评估价值_]-[_账面价值_])/[_账面价值_] END AS [增值率_]
+SELECT
+    [_编号_],
+    [_科目名称_],
+    [_账面价值_],
+    [评估价值_],
+    [评估价值_]-[_账面价值_] AS [增减值_],
+    ([评估价值_]-[_账面价值_])/[_账面价值_] AS [增值率_],
+    [_账面价值_]+[评估价值_] AS [小计]
 FROM [表5-tot];''',
 
+    # 缓存汇总 表6-sum
     '表6': '''
 CREATE VIEW [表6-sum] AS
-SELECT "6-1" AS [_编号_], "长期借款" AS [_科目名称_],
-sum([_账面价值_]) AS [_账面价值_],
-sum([评估价值_]) AS [评估价值_]
+SELECT
+    "6-1" AS [_编号_],
+    "长期借款" AS [_科目名称_],
+    CASE WHEN sum([_账面价值_]) IS NULL THEN 0 ELSE sum([_账面价值_]) END AS [_账面价值_],
+    CASE WHEN sum([评估价值_]) IS NULL THEN 0 ELSE sum([评估价值_]) END AS [评估价值_]
 FROM [表6-1]
 UNION ALL
-SELECT "6-2" AS [_编号_], "应付债券" AS [_科目名称_],
-sum([_账面价值_]) AS [_账面价值_],
-sum([评估价值_]) AS [评估价值_]
+SELECT
+    "6-2" AS [_编号_],
+    "应付债券" AS [_科目名称_],
+    CASE WHEN sum([_账面价值_]) IS NULL THEN 0 ELSE sum([_账面价值_]) END AS [_账面价值_],
+    CASE WHEN sum([评估价值_]) IS NULL THEN 0 ELSE sum([评估价值_]) END AS [评估价值_]
 FROM [表6-2]
 UNION ALL
-SELECT "6-3" AS [_编号_], "长期应付款" AS [_科目名称_],
-sum([_账面价值合计_]) AS [_账面价值_],
-sum([评估价值_]) AS [评估价值_]
+SELECT
+    "6-3" AS [_编号_],
+    "长期应付款" AS [_科目名称_],
+    CASE WHEN sum([_账面价值合计_]) IS NULL THEN 0 ELSE sum([_账面价值合计_]) END AS [_账面价值_],
+    CASE WHEN sum([评估价值_]) IS NULL THEN 0 ELSE sum([评估价值_]) END AS [评估价值_]
 FROM [表6-3]
 UNION ALL
-SELECT "6-4" AS [_编号_], "专项应付款" AS [_科目名称_],
-sum([_账面价值_]) AS [_账面价值_],
-sum([评估价值_]) AS [评估价值_]
+SELECT
+    "6-4" AS [_编号_],
+    "专项应付款" AS [_科目名称_],
+    CASE WHEN sum([_账面价值_]) IS NULL THEN 0 ELSE sum([_账面价值_]) END AS [_账面价值_],
+    CASE WHEN sum([评估价值_]) IS NULL THEN 0 ELSE sum([评估价值_]) END AS [评估价值_]
 FROM [表6-4]
 UNION ALL
-SELECT "6-5" AS [_编号_], "预计负债" AS [_科目名称_],
-sum([_账面价值_]) AS [_账面价值_],
-sum([评估价值_]) AS [评估价值_]
+SELECT
+    "6-5" AS [_编号_],
+    "预计负债" AS [_科目名称_],
+    CASE WHEN sum([_账面价值_]) IS NULL THEN 0 ELSE sum([_账面价值_]) END AS [_账面价值_],
+    CASE WHEN sum([评估价值_]) IS NULL THEN 0 ELSE sum([评估价值_]) END AS [评估价值_]
 FROM [表6-5]
 UNION ALL
-SELECT "6-6" AS [_编号_], "递延所得税负债" AS [_科目名称_],
-sum([_账面价值_]) AS [_账面价值_],
-sum([评估价值_]) AS [评估价值_]
+SELECT
+    "6-6" AS [_编号_],
+    "递延所得税负债" AS [_科目名称_],
+    CASE WHEN sum([_账面价值_]) IS NULL THEN 0 ELSE sum([_账面价值_]) END AS [_账面价值_],
+    CASE WHEN sum([评估价值_]) IS NULL THEN 0 ELSE sum([评估价值_]) END AS [评估价值_]
 FROM [表6-6]
 UNION ALL
-SELECT "6-7" AS [_编号_], "其他非流动负债" AS [_科目名称_],
-sum([_账面价值_]) AS [_账面价值_],
-sum([评估价值_]) AS [评估价值_]
+SELECT
+    "6-7" AS [_编号_],
+    "其他非流动负债" AS [_科目名称_],
+    CASE WHEN sum([_账面价值_]) IS NULL THEN 0 ELSE sum([_账面价值_]) END AS [_账面价值_],
+    CASE WHEN sum([评估价值_]) IS NULL THEN 0 ELSE sum([评估价值_]) END AS [评估价值_]
 FROM [表6-7];''',
+    # 缓存合计 表6-tot
     '表6 ': '''
 CREATE VIEW [表6-tot] AS
-SELECT "6" AS [_编号_], "非流动负债合计" AS [_科目名称_],
-sum([_账面价值_]) AS [_账面价值_],
-sum([评估价值_]) AS [评估价值_]
+SELECT
+    "6" AS [_编号_],
+    "非流动负债合计" AS [_科目名称_],
+    sum([_账面价值_]) AS [_账面价值_],
+    sum([评估价值_]) AS [评估价值_]
 FROM [表6-sum];''',
+    # 创建视图 表6
     '表6  ': '''
 CREATE VIEW [表6] AS
-SELECT [_编号_],[_科目名称_],
-[_账面价值_],
-[评估价值_],
-CASE WHEN [_账面价值_] IS NULL AND [评估价值_] IS NULL THEN NULL
-WHEN [_账面价值_] IS NULL THEN [评估价值_]
-WHEN [评估价值_] IS NULL THEN -[_账面价值_] END AS [增减值_],
-CASE WHEN [_账面价值_] IS NULL THEN NULL
-WHEN [评估价值_] IS NULL THEN -1
-ELSE ([评估价值_]-[_账面价值_])/[_账面价值_] END AS [增值率_]
+SELECT
+    [_编号_],
+    [_科目名称_],
+    [_账面价值_],
+    [评估价值_],
+    [评估价值_]-[_账面价值_] AS [增减值_],
+    ([评估价值_]-[_账面价值_])/[_账面价值_] AS [增值率_],
+    [_账面价值_]+[评估价值_] AS [小计]
 FROM [表6-sum]
 UNION ALL
-SELECT [_编号_],[_科目名称_],
-[_账面价值_],
-[评估价值_],
-CASE WHEN [_账面价值_] IS NULL AND [评估价值_] IS NULL THEN NULL
-WHEN [_账面价值_] IS NULL THEN [评估价值_]
-WHEN [评估价值_] IS NULL THEN -[_账面价值_] END AS [增减值_],
-CASE WHEN [_账面价值_] IS NULL THEN NULL
-WHEN [评估价值_] IS NULL THEN -1
-ELSE ([评估价值_]-[_账面价值_])/[_账面价值_] END AS [增值率_]
+SELECT
+    [_编号_],
+    [_科目名称_],
+    [_账面价值_],
+    [评估价值_],
+    [评估价值_]-[_账面价值_] AS [增减值_],
+    ([评估价值_]-[_账面价值_])/[_账面价值_] AS [增值率_],
+    [_账面价值_]+[评估价值_] AS [小计]
 FROM [表6-tot];''',
 }
