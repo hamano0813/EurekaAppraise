@@ -9,6 +9,8 @@ SOURCES = ../../appraise.pyw \
           ../../program/asset_method/edit_table/edit_vertical.py \
           ../../program/asset_method/edit_table/edit_horizontal.py \
           ../../program/asset_method/edit_table/total_model.py \
+          ../../program/asset_method/input_table/input_view.py \
+          ../../program/asset_method/summary_table/summary_view.py \
 
 TRANSLATIONS = zh_CN.ts
 

@@ -10,9 +10,10 @@ from .option_dialog import OptionDialog
 from ..branch_thread import CreateProjectThread
 from ..asset_method.account_tree import AccountTree
 from ..asset_method.edit_table import EditTable
+from ..asset_method.input_table import InputTable
 from ..asset_method.summary_table import SummaryTable
 # from ..custom_widget import UnFrameWindow
-from ..initialize_setting import EDIT_TABLE, SUMMARY_VIEW
+from ..initialize_setting import EDIT_TABLE, SUMMARY_VIEW, SPECIAL_TABLE
 from program.resource import *
 
 
@@ -169,6 +170,8 @@ class MainWindow(QtWidgets.QMainWindow):
             table = EditTable(self.conn, table_name, self)
         elif table_name in SUMMARY_VIEW:
             table = SummaryTable(self.conn, table_name, self)
+        elif table_name in SPECIAL_TABLE:
+            table = InputTable(self.conn, table_name, self)
         else:
             table = EditTable(self.conn, table_name, self)
         self.setCentralWidget(table)

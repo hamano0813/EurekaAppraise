@@ -89,22 +89,22 @@
 <context>
     <name>EditView</name>
     <message>
-        <location filename="../../program/asset_method/edit_table/edit_view.py" line="93"/>
+        <location filename="../../program/asset_method/edit_table/edit_view.py" line="95"/>
         <source>Copy</source>
         <translation>复制</translation>
     </message>
     <message>
-        <location filename="../../program/asset_method/edit_table/edit_view.py" line="99"/>
+        <location filename="../../program/asset_method/edit_table/edit_view.py" line="101"/>
         <source>Paste</source>
         <translation>粘贴</translation>
     </message>
     <message>
-        <location filename="../../program/asset_method/edit_table/edit_view.py" line="96"/>
+        <location filename="../../program/asset_method/edit_table/edit_view.py" line="98"/>
         <source>Cut</source>
         <translation>剪切</translation>
     </message>
     <message>
-        <location filename="../../program/asset_method/edit_table/edit_view.py" line="102"/>
+        <location filename="../../program/asset_method/edit_table/edit_view.py" line="104"/>
         <source>Clear</source>
         <translation>清除</translation>
     </message>
@@ -133,6 +133,29 @@
     </message>
 </context>
 <context>
+    <name>InputView</name>
+    <message>
+        <location filename="../../program/asset_method/input_table/input_view.py" line="84"/>
+        <source>Copy</source>
+        <translation>复制</translation>
+    </message>
+    <message>
+        <location filename="../../program/asset_method/input_table/input_view.py" line="87"/>
+        <source>Cut</source>
+        <translation>剪切</translation>
+    </message>
+    <message>
+        <location filename="../../program/asset_method/input_table/input_view.py" line="90"/>
+        <source>Paste</source>
+        <translation>粘贴</translation>
+    </message>
+    <message>
+        <location filename="../../program/asset_method/input_table/input_view.py" line="93"/>
+        <source>Clear</source>
+        <translation>清除</translation>
+    </message>
+</context>
+<context>
     <name>LoadDialog</name>
     <message>
         <location filename="../../program/main_interface/load_dialog.py" line="56"/>
@@ -153,199 +176,199 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../../program/main_interface/main_window.py" line="30"/>
+        <location filename="../../program/main_interface/main_window.py" line="31"/>
         <source>New</source>
         <translation>新建</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/main_window.py" line="32"/>
+        <location filename="../../program/main_interface/main_window.py" line="33"/>
         <source>Load</source>
         <translation>载入</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/main_window.py" line="206"/>
+        <location filename="../../program/main_interface/main_window.py" line="209"/>
         <source>Close</source>
         <translation>关闭</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/main_window.py" line="210"/>
+        <location filename="../../program/main_interface/main_window.py" line="213"/>
         <source>Option</source>
         <translation>选项</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/main_window.py" line="38"/>
+        <location filename="../../program/main_interface/main_window.py" line="39"/>
         <source>Exit</source>
         <translation>退出</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/main_window.py" line="39"/>
+        <location filename="../../program/main_interface/main_window.py" line="40"/>
         <source>Project</source>
         <translation>项目</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/main_window.py" line="96"/>
+        <location filename="../../program/main_interface/main_window.py" line="97"/>
         <source>Toolbar</source>
         <translation>工具栏</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/main_window.py" line="105"/>
+        <location filename="../../program/main_interface/main_window.py" line="106"/>
         <source>Eureka Appraise</source>
         <translation>资产评估辅助工具</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/main_window.py" line="116"/>
+        <location filename="../../program/main_interface/main_window.py" line="117"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/main_window.py" line="117"/>
+        <location filename="../../program/main_interface/main_window.py" line="118"/>
         <source>Project file already exists!
 Overwrite?</source>
         <translation>项目文件已经存在！
 是否覆盖？</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/main_window.py" line="118"/>
+        <location filename="../../program/main_interface/main_window.py" line="119"/>
         <source>Confirm</source>
         <translation>确认</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/main_window.py" line="119"/>
+        <location filename="../../program/main_interface/main_window.py" line="120"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/main_window.py" line="150"/>
+        <location filename="../../program/main_interface/main_window.py" line="151"/>
         <source>Alert</source>
         <translation>提示</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/main_window.py" line="151"/>
+        <location filename="../../program/main_interface/main_window.py" line="152"/>
         <source>Restart program to switch setting?</source>
         <translation>重启程序以切换设置？</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/main_window.py" line="152"/>
+        <location filename="../../program/main_interface/main_window.py" line="153"/>
         <source>Yes</source>
         <translation>同意</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/main_window.py" line="153"/>
+        <location filename="../../program/main_interface/main_window.py" line="154"/>
         <source>Wait</source>
         <translation>等待</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/main_window.py" line="25"/>
+        <location filename="../../program/main_interface/main_window.py" line="26"/>
         <source>Account</source>
         <translation>科目</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/main_window.py" line="66"/>
+        <location filename="../../program/main_interface/main_window.py" line="67"/>
         <source>Asset Method</source>
         <translation>资产基础法</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/main_window.py" line="67"/>
+        <location filename="../../program/main_interface/main_window.py" line="68"/>
         <source>Income Method</source>
         <translation>收益法</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/main_window.py" line="208"/>
+        <location filename="../../program/main_interface/main_window.py" line="211"/>
         <source>Appraise Work</source>
         <translation>评估工作</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/main_window.py" line="46"/>
+        <location filename="../../program/main_interface/main_window.py" line="47"/>
         <source>Project Information</source>
         <translation>项目信息</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/main_window.py" line="47"/>
+        <location filename="../../program/main_interface/main_window.py" line="48"/>
         <source>Material List</source>
         <translation>资料清单</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/main_window.py" line="48"/>
+        <location filename="../../program/main_interface/main_window.py" line="49"/>
         <source>Field Record</source>
         <translation>现场勘察记录表</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/main_window.py" line="49"/>
+        <location filename="../../program/main_interface/main_window.py" line="50"/>
         <source>Project Contract</source>
         <translation>项目协议书</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/main_window.py" line="50"/>
+        <location filename="../../program/main_interface/main_window.py" line="51"/>
         <source>Commitment Letter</source>
         <translation>承诺函</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/main_window.py" line="51"/>
+        <location filename="../../program/main_interface/main_window.py" line="52"/>
         <source>Service Question</source>
         <translation>送达回执</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/main_window.py" line="52"/>
+        <location filename="../../program/main_interface/main_window.py" line="53"/>
         <source>Cash Check</source>
         <translation>现金盘点表</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/main_window.py" line="53"/>
+        <location filename="../../program/main_interface/main_window.py" line="54"/>
         <source>Current Letter</source>
         <translation>往来函证</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/main_window.py" line="54"/>
+        <location filename="../../program/main_interface/main_window.py" line="55"/>
         <source>Output</source>
         <translation>导出</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/main_window.py" line="207"/>
+        <location filename="../../program/main_interface/main_window.py" line="210"/>
         <source>Field Work</source>
         <translation>现场工作</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/main_window.py" line="72"/>
+        <location filename="../../program/main_interface/main_window.py" line="73"/>
         <source>Appraise Report</source>
         <translation>评估报告</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/main_window.py" line="73"/>
+        <location filename="../../program/main_interface/main_window.py" line="74"/>
         <source>Appraise Explain</source>
         <translation>评估说明</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/main_window.py" line="74"/>
+        <location filename="../../program/main_interface/main_window.py" line="75"/>
         <source>Declaration Form</source>
         <translation>上报表</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/main_window.py" line="75"/>
+        <location filename="../../program/main_interface/main_window.py" line="76"/>
         <source>Detail Form</source>
         <translation>明细表</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/main_window.py" line="76"/>
+        <location filename="../../program/main_interface/main_window.py" line="77"/>
         <source>Work Draft</source>
         <translation>工作底稿</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/main_window.py" line="209"/>
+        <location filename="../../program/main_interface/main_window.py" line="212"/>
         <source>Generate</source>
         <translation>文件生成</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/main_window.py" line="84"/>
+        <location filename="../../program/main_interface/main_window.py" line="85"/>
         <source>Staff</source>
         <translation>评估人员</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/main_window.py" line="85"/>
+        <location filename="../../program/main_interface/main_window.py" line="86"/>
         <source>About</source>
         <translation>关于</translation>
     </message>
     <message>
-        <location filename="../../program/main_interface/main_window.py" line="36"/>
+        <location filename="../../program/main_interface/main_window.py" line="37"/>
         <source>Setting</source>
         <translation>设置</translation>
     </message>
@@ -409,6 +432,14 @@ Overwrite?</source>
         <location filename="../../program/main_interface/load_dialog.py" line="14"/>
         <source>Project Name</source>
         <translation>项目全称</translation>
+    </message>
+</context>
+<context>
+    <name>SummaryView</name>
+    <message>
+        <location filename="../../program/asset_method/summary_table/summary_view.py" line="63"/>
+        <source>Copy</source>
+        <translation>复制</translation>
     </message>
 </context>
 <context>

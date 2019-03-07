@@ -3,7 +3,7 @@
 
 import sqlite3
 from PyQt5 import QtCore, QtGui
-from ...initialize_setting import EDIT_TABLE, SUMMARY_VIEW
+from ...initialize_setting import EDIT_TABLE, SUMMARY_VIEW, SPECIAL_TABLE
 
 
 class TreeItem:
@@ -68,6 +68,11 @@ class AccountModel(QtCore.QAbstractItemModel):
                     if self.code(index, QtCore.Qt.DisplayRole) == '表1':
                         table_name = '表2'
                     if c.execute(f'''SELECT sum([小计]) FROM [{table_name}];''').fetchone()[0]:
+                        return QtGui.QColor(QtCore.Qt.blue)
+                elif self.code(index, QtCore.Qt.DisplayRole) in SPECIAL_TABLE:
+                    if c.execute(f'''SELECT CASE WHEN sum([_账面价值_]) IS NULL THEN 0 ELSE sum([_账面价值_]) END +
+                                            CASE WHEN sum([评估价值_]) IS NULL THEN 0 ELSE sum([评估价值_]) END
+                                     FROM [{table_name}];''').fetchone()[0]:
                         return QtGui.QColor(QtCore.Qt.blue)
             except sqlite3.OperationalError as e:
                 print(e)

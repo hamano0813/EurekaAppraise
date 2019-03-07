@@ -19,6 +19,9 @@ class SummaryView(QtWidgets.QTableView):
         self.horizontalHeader().setHighlightSections(False)
         self.setWordWrap(False)
         self.keyPressEvent = self.key_press(self.keyPressEvent)
+        self.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+        # noinspection PyUnresolvedReferences
+        self.customContextMenuRequested[QtCore.QPoint].connect(self.context_menu)
 
     def set_width(self, func):
         def wrapper(model: SummaryModel):
@@ -44,8 +47,22 @@ class SummaryView(QtWidgets.QTableView):
         # noinspection PyArgumentList
         def wrapper(event: QtGui.QKeyEvent):
             if event.key() == QtCore.Qt.Key_C and event.modifiers() == QtCore.Qt.ControlModifier:
-                QtWidgets.QApplication.clipboard().setText(self.model().copy_range(self.selectedIndexes()))
+                self.copy_range()
             else:
                 func(event)
 
         return wrapper
+
+    def copy_range(self):
+        # noinspection PyArgumentList
+        QtWidgets.QApplication.clipboard().setText(self.model().copy_range(self.selectedIndexes()))
+
+    # noinspection PyArgumentList
+    def context_menu(self, pos: QtCore.QPoint):
+        position_idx = self.indexAt(pos)
+        menu = QtWidgets.QMenu()
+        copy_action = QtWidgets.QAction(self.tr('Copy'), self)
+        copy_action.triggered.connect(self.copy_range)
+        menu.addAction(copy_action)
+        if position_idx.row() >= 0 and position_idx.column() >= 0:
+            menu.exec_(QtGui.QCursor().pos())

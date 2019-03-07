@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import sqlite3
-from PyQt5 import QtWidgets, QtCore, QtGui
+from PyQt5 import QtWidgets, QtCore
 from .edit_model import EditModel
 from .edit_delegate import EditDelegate
 from .edit_view import EditView
@@ -39,12 +39,3 @@ class EditTable(QtWidgets.QFrame):
         main_layout.addWidget(self.edt_v, 0, 0, 1, 1)
         main_layout.addWidget(self.tot_v, 1, 0, 1, 1)
         self.setLayout(main_layout)
-
-    def create_action(self, name: str, slot: classmethod = None, icon: str = None) -> QtWidgets.QAction:
-        action = QtWidgets.QAction(name, self)
-        action.setObjectName(name)
-        if slot:
-            action.triggered.connect(slot)
-        if icon:
-            action.setIcon(QtGui.QIcon(icon))
-        return action

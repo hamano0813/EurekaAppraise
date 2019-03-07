@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from functools import partial
 from PyQt5 import QtWidgets, QtCore, QtGui
 from .edit_vertical import EditVerticalHeader
 from .edit_horizontal import EditHorizontalHeader
@@ -91,7 +90,6 @@ class EditView(QtWidgets.QTableView):
     # noinspection PyArgumentList
     def context_menu(self, pos: QtCore.QPoint):
         position_idx = self.indexAt(pos)
-        self.selectedIndexes()
         menu = QtWidgets.QMenu()
         copy_action = QtWidgets.QAction(self.tr('Copy'), self)
         copy_action.triggered.connect(self.copy_range)
