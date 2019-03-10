@@ -42,7 +42,7 @@ class EditView(QtWidgets.QTableView):
                     self.setColumnWidth(idx, max(70, title_width))
                 elif data_type == 'Bool':
                     self.setColumnWidth(idx, max(30, title_width))
-                elif data_type.split('(')[0] == 'Nchar':
+                elif data_type.startswith('Nchar'):
                     self.setColumnWidth(idx, max(int(data_type.split('(')[1].rstrip(')')) * 5, title_width))
             self.reset_height()
             model.rowsInserted.connect(self.reset_height)
