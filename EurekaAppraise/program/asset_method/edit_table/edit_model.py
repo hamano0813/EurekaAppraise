@@ -28,7 +28,8 @@ class EditModel(QtCore.QAbstractTableModel):
         self.title_name = [parameter[1] for parameter in parameters]
         self.data_type = [parameter[2].capitalize() for parameter in parameters]
         self.auto_formula = c.execute(f"SELECT [强制], [等式] FROM [公式] WHERE [表名]='{self.table_name}';").fetchall()
-        self.basic_date = parser.parse(c.execute(f'SELECT [评估基准日] FROM [基础信息];').fetchall()[0][0])
+        self.basic_date = parser.parse(
+            c.execute(f'SELECT [评估基准日] FROM [基础信息];').fetchall()[0][0]).strftime('%Y-%m-%d')
         self._data = [list(row) for row in c.execute(f'SELECT * FROM [{self.table_name}];').fetchall()]
         c.close()
 
@@ -87,19 +88,18 @@ class EditModel(QtCore.QAbstractTableModel):
         if not index.isValid():
             return QtCore.QVariant()
         last_row = index.row() == self.rowCount() - 1
+        auto_columns = [formula.split('=')[0] for auto, formula in self.auto_formula if auto]
+        if last_row:
+            self.insertRows(index.row())
         if role == QtCore.Qt.EditRole:
-            if last_row:
-                self.insertRows(index.row())
-            auto_columns = [formula.split('=')[0] for auto, formula in self.auto_formula if auto]
             if self.title_name[index.column()] not in auto_columns or self.operation:
                 self._data[index.row()][index.column()] = value
             for formula_setting in self.auto_formula:
                 if self.title_name[index.column()] in formula_setting[1].split('=')[1]:
                     self.automatic_operation(index, formula_setting)
             for row in range(self.rowCount() - 2, -1, -1):
-                if any(self._data[row]):
-                    break
-                self.removeRows(row)
+                if not any(self._data[row]) and not self.range:
+                    self.removeRows(row)
             if self.range:
                 self.save_data()
             return True
@@ -164,7 +164,7 @@ class EditModel(QtCore.QAbstractTableModel):
 
     def aging(self, date_text):
         try:
-            date = parser.parse(date_text)
+            date = parser.parse(date_text).strftime('%Y-%m-%d')
         except ValueError as e:
             print(date_text, e)
             return None
@@ -185,7 +185,8 @@ class EditModel(QtCore.QAbstractTableModel):
         data_type: str = self.data_type[index.column()]
         if data_type == 'Date':
             try:
-                _value = str(parser.parse(value)) if str(parser.parse(value)) != 'NaT' else None
+                d_str = value.replace('年', '-').replace('月', '-').replace('日', '-')
+                _value = str(parser.parse(d_str).strftime('%Y-%m-%d')) if str(parser.parse(d_str)) != 'NaT' else None
             except ValueError as e:
                 print(value, index.row(), index.column(), e)
         elif data_type == 'Percent':
@@ -241,7 +242,7 @@ class EditModel(QtCore.QAbstractTableModel):
             self.range = False
             for rid, row_data in enumerate(data):
                 for cid, value in enumerate(row_data):
-                    idx = self.createIndex(start_row + rid, start_column + cid)
+                    idx: QtCore.QModelIndex = self.createIndex(start_row + rid, start_column + cid)
                     self.paste_data(idx, value)
             self.save_data()
             self.range = True

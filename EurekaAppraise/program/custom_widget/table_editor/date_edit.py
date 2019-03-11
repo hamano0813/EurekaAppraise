@@ -21,6 +21,7 @@ class DateEdit(QtWidgets.QDateEdit):
 
     @value.setter
     def value(self, value):
+        print(value)
         if not value:
             self.setDate(QtCore.QDate(2000, 1, 1))
         else:

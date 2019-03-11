@@ -18,6 +18,7 @@ class EditView(QtWidgets.QTableView):
         self.setHorizontalHeader(EditHorizontalHeader(QtCore.Qt.Horizontal, self))
         self.setSelectionBehavior(QtWidgets.QTableView.SelectRows | QtWidgets.QTableView.SelectColumns)
         self.verticalHeader().setSectionsClickable(True)
+        self.horizontalHeader().setSectionsClickable(True)
         self.horizontalHeader().setHighlightSections(False)
         self.setWordWrap(False)
         self.keyPressEvent = self.key_press(self.keyPressEvent)
