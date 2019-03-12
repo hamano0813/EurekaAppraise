@@ -84,7 +84,7 @@ class LoadDialog(QtWidgets.QDialog):
                 temp_conn = sqlite3.Connection(path + file)
                 c = temp_conn.cursor()
                 c.execute('''SELECT [项目全称] FROM [基础信息];''')
-                project_name = c.fetchone()
+                project_name = c.fetchone()[0]
                 project_table.append([file.replace('.db3', ''), project_name])
                 c.close()
                 temp_conn.close()

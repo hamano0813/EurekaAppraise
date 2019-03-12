@@ -3,22 +3,30 @@
 
 from PyQt5 import QtWidgets, QtCore
 from .information_model import InformationModel
+from .information_delegate import InformationDelegate
 
 
-class InformationFrame(QtWidgets.QFrame):
-    def __init__(self, conn, table_name, parent, flags):
+class InformationTab(QtWidgets.QFrame):
+    def __init__(self, conn, table_name, parent=None, flags=QtCore.Qt.FramelessWindowHint):
         QtWidgets.QFrame.__init__(self, parent, flags)
         self.conn = conn
-        self.table_name = table_name
+        self.setWindowTitle(table_name)
         self.mapper = QtWidgets.QDataWidgetMapper()
-        self.information_model = InformationModel(self.conn, table_name, flags)
-        self.main_layout = QtWidgets.QGridLayout()
+        self.mapper.setSubmitPolicy(QtWidgets.QDataWidgetMapper.AutoSubmit)
+        self.information_model = InformationModel(self.conn, table_name, self)
+        self.mapper.setModel(self.information_model)
+        self.main_layout = QtWidgets.QFormLayout()
+        self.setContentsMargins(100, 20, 100, 20)
+        self.setLayout(self.main_layout)
 
-    def add_widget(self, editor: QtWidgets.QWidget, field_cid: int, layout: list):
+    # noinspection PyArgumentList
+    def add_widget(self, editor: QtWidgets.QWidget, field_cid: int):
         name = self.information_model.title_name[field_cid]
-        label = QtWidgets.QLabel(name, self)
-        editor_layout = layout.copy()
-        editor_layout[1] = layout[1] * 2 + 1
-        self.main_layout.addWidget(label, *layout)
-        self.main_layout.addWidget(editor, *editor_layout)
+        self.main_layout.addRow(name, editor)
         self.mapper.addMapping(editor, field_cid)
+        self.mapper.setItemDelegate(InformationDelegate())
+        self.mapper.toFirst()
+
+    def closeEvent(self, *args, **kwargs):
+        if self.conn:
+            self.conn.commit()

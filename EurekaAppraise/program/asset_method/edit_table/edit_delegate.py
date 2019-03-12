@@ -76,3 +76,6 @@ class EditDelegate(QtWidgets.QStyledItemDelegate):
                 item_model.setData(index, None)
         else:
             item_model.setData(index, editor.value)
+
+    def updateEditorGeometry(self, editor, option, index: QtCore.QModelIndex):
+        editor.setGeometry(option.rect)

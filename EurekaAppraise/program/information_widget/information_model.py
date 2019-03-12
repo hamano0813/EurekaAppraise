@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import sqlite3
-from PyQt5 import QtWidgets, QtCore
+from PyQt5 import QtCore
 
 
 class InformationModel(QtCore.QAbstractTableModel):
@@ -32,11 +32,22 @@ class InformationModel(QtCore.QAbstractTableModel):
         if not index.isValid():
             return QtCore.QVariant()
         if role == QtCore.Qt.EditRole:
-            return self._data[index.column()]
+            c = self.conn.cursor()
+            sql = f'SELECT [{self.title_name[index.column()]}] FROM [{self.table_name}];'
+            c.execute(sql)
+            value = c.fetchone()[0]
+            c.close()
+            return value
         return QtCore.QVariant()
 
     def setData(self, index: QtCore.QModelIndex, value, role=QtCore.Qt.EditRole):
         if not index.isValid():
             return QtCore.QVariant()
-        if role == QtCore.Qt.EditRole:
-            pass
+        if role == QtCore.Qt.EditRole and self.conn:
+            if value is None:
+                value = ''
+            c = self.conn.cursor()
+            sql = f"UPDATE [{self.table_name}] SET [{self.title_name[index.column()]}]='{value}';"
+            c.execute(sql)
+            c.close()
+            self.conn.commit()

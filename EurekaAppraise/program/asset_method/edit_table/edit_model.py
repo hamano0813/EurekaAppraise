@@ -28,8 +28,7 @@ class EditModel(QtCore.QAbstractTableModel):
         self.title_name = [parameter[1] for parameter in parameters]
         self.data_type = [parameter[2].capitalize() for parameter in parameters]
         self.auto_formula = c.execute(f"SELECT [强制], [等式] FROM [公式] WHERE [表名]='{self.table_name}';").fetchall()
-        self.basic_date = parser.parse(
-            c.execute(f'SELECT [评估基准日] FROM [基础信息];').fetchall()[0][0]).strftime('%Y-%m-%d')
+        self.basic_date = parser.parse(c.execute(f'SELECT [评估基准日] FROM [基础信息];').fetchall()[0][0])
         self._data = [list(row) for row in c.execute(f'SELECT * FROM [{self.table_name}];').fetchall()]
         c.close()
 
@@ -98,11 +97,11 @@ class EditModel(QtCore.QAbstractTableModel):
                 if self.title_name[index.column()] in formula_setting[1].split('=')[1]:
                     self.automatic_operation(index, formula_setting)
             for row in range(self.rowCount() - 2, -1, -1):
-                if not any(self._data[row]) and not self.range:
-                    self.removeRows(row)
+                if any(self._data[row]):
+                    break
+                self.removeRows(row)
             if self.range:
                 self.save_data()
-            return True
 
     def flags(self, index: QtCore.QModelIndex):
         if not index.isValid():
@@ -130,13 +129,11 @@ class EditModel(QtCore.QAbstractTableModel):
         for row in range(rows):
             self._data.insert(position + row, [None] * self.columnCount())
         self.endInsertRows()
-        return True
 
     def removeRows(self, position, rows=1, index=QtCore.QModelIndex(), *args, **kwargs):
         self.beginRemoveRows(QtCore.QModelIndex(), position, position + rows - 1)
         self._data = self._data[:position] + self._data[position + rows:]
         self.endRemoveRows()
-        return True
 
     @property
     def total(self):
@@ -151,7 +148,9 @@ class EditModel(QtCore.QAbstractTableModel):
                 if not index.row() == self.rowCount() - 1 and self._data[index.row()][c_idx]:
                     formula_text = formula_text.replace(title, str(self._data[index.row()][c_idx]))
                 else:
-                    formula_text = formula_text.replace(title, '0')
+                    formula_text: str = formula_text.replace(title, '0')
+                if formula_text.endswith('/0'):
+                    formula_text = 'None'
             try:
                 value = eval(formula_text)
             except (ZeroDivisionError, NameError) as e:
@@ -164,7 +163,7 @@ class EditModel(QtCore.QAbstractTableModel):
 
     def aging(self, date_text):
         try:
-            date = parser.parse(date_text).strftime('%Y-%m-%d')
+            date = parser.parse(date_text)
         except ValueError as e:
             print(date_text, e)
             return None

@@ -8,6 +8,7 @@ from .create_dialog import CreateDialog
 from .load_dialog import LoadDialog
 from .option_dialog import OptionDialog
 from ..branch_thread import CreateProjectThread
+from ..information_widget.information_frame import InformationFrame
 from ..asset_method.account_tree import AccountTree
 from ..asset_method.edit_table import EditTable
 from ..asset_method.input_table import InputTable
@@ -44,7 +45,7 @@ class MainWindow(QtWidgets.QMainWindow):
                                          program_setting_action,
                                          exit_program_action])
 
-        project_information_action = self.create_action(self.tr('Project Information'))
+        project_information_action = self.create_action(self.tr('Project Information'), self.project_information)
         material_list_action = self.create_action(self.tr('Material List'))
         field_record_action = self.create_action(self.tr('Field Record'))
         project_contract_action = self.create_action(self.tr('Project Contract'))
@@ -157,6 +158,10 @@ class MainWindow(QtWidgets.QMainWindow):
             if box.clickedButton() == yes:
                 os.startfile('appraise.pyw')
                 self.close()
+
+    def project_information(self):
+        information_frame = InformationFrame(self.conn, self)
+        self.setCentralWidget(information_frame)
 
     def asset_method(self):
         account_tree = AccountTree(self.conn, self)
