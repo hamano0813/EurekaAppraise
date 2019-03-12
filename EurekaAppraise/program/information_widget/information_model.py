@@ -46,8 +46,11 @@ class InformationModel(QtCore.QAbstractTableModel):
         if role == QtCore.Qt.EditRole and self.conn:
             if value is None:
                 value = ''
-            c = self.conn.cursor()
-            sql = f"UPDATE [{self.table_name}] SET [{self.title_name[index.column()]}]='{value}';"
-            c.execute(sql)
-            c.close()
-            self.conn.commit()
+            try:
+                c = self.conn.cursor()
+                sql = f"UPDATE [{self.table_name}] SET [{self.title_name[index.column()]}]='{value}';"
+                c.execute(sql)
+                c.close()
+                self.conn.commit()
+            except sqlite3.ProgrammingError as e:
+                print(e)

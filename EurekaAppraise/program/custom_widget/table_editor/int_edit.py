@@ -10,6 +10,7 @@ class IntEdit(QtWidgets.QLineEdit):
         self.setAlignment(QtCore.Qt.AlignRight)
         self.setValidator(QtGui.QRegExpValidator(QtCore.QRegExp('^[+-]?\\d*')))
         self.editingFinished.connect(self.get_int)
+        self.setSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Preferred)
 
     def get_int(self):
         if self.displayText():
@@ -27,4 +28,5 @@ class IntEdit(QtWidgets.QLineEdit):
     def value(self, value):
         if not value:
             self.setText('')
-        self.setText(str(int(value)))
+        else:
+            self.setText(str(int(value)))

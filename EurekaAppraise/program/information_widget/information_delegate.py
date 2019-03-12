@@ -25,4 +25,5 @@ class InformationDelegate(QtWidgets.QStyledItemDelegate):
             else:
                 item_model.setData(index, None)
         else:
+            print(index.column(), editor.value)
             item_model.setData(index, editor.value)

@@ -22,6 +22,7 @@ class SwitchRadio(QtWidgets.QFrame):
 
         self.setLayout(main_layout)
         self.setContentsMargins(0, 0, 0, 0)
+        self.setSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Preferred)
 
     @property
     def value(self):

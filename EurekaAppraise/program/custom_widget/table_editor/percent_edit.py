@@ -10,6 +10,7 @@ class PercentEdit(QtWidgets.QLineEdit):
         self.setAlignment(QtCore.Qt.AlignRight)
         self.setValidator(QtGui.QRegExpValidator(QtCore.QRegExp('^[+-]?\\d*(\\.\\d{0,2})?')))
         self.editingFinished.connect(self.get_percent)
+        self.setSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Preferred)
 
     def get_percent(self):
         if self.displayText():

@@ -22,6 +22,7 @@ class CheckCombo(QtWidgets.QComboBox):
             self.checkbox_list.append(checkbox)
         self.setModel(self.list_widget.model())
         self.setView(self.list_widget)
+        self.setSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Preferred)
 
     def refresh(self):
         self.lineEdit().setReadOnly(False)

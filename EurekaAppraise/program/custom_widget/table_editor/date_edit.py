@@ -12,6 +12,7 @@ class DateEdit(QtWidgets.QDateEdit):
         self.calendarWidget().setGridVisible(True)
         self.calendarWidget().setHorizontalHeaderFormat(QtWidgets.QCalendarWidget.NoHorizontalHeader)
         self.calendarWidget().setVerticalHeaderFormat(QtWidgets.QCalendarWidget.NoVerticalHeader)
+        self.setSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Preferred)
 
     @property
     def value(self):
@@ -21,7 +22,6 @@ class DateEdit(QtWidgets.QDateEdit):
 
     @value.setter
     def value(self, value):
-        print(value)
         if not value:
             self.setDate(QtCore.QDate(2000, 1, 1))
         else:

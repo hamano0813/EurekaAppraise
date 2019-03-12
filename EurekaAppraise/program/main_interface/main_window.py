@@ -138,6 +138,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def close_project(self):
         if self.conn:
+            self.conn.commit()
             c = self.conn.cursor()
             c.execute('VACUUM')
             c.close()

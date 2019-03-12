@@ -9,14 +9,13 @@ from .information_delegate import InformationDelegate
 class InformationTab(QtWidgets.QFrame):
     def __init__(self, conn, table_name, parent=None, flags=QtCore.Qt.FramelessWindowHint):
         QtWidgets.QFrame.__init__(self, parent, flags)
-        self.conn = conn
         self.setWindowTitle(table_name)
         self.mapper = QtWidgets.QDataWidgetMapper()
         self.mapper.setSubmitPolicy(QtWidgets.QDataWidgetMapper.AutoSubmit)
-        self.information_model = InformationModel(self.conn, table_name, self)
+        self.information_model = InformationModel(conn, table_name, self)
         self.mapper.setModel(self.information_model)
         self.main_layout = QtWidgets.QFormLayout()
-        self.setContentsMargins(100, 20, 100, 20)
+        self.main_layout.setSpacing(10)
         self.setLayout(self.main_layout)
 
     # noinspection PyArgumentList
@@ -28,5 +27,5 @@ class InformationTab(QtWidgets.QFrame):
         self.mapper.toFirst()
 
     def closeEvent(self, *args, **kwargs):
-        if self.conn:
-            self.conn.commit()
+        if self.information_model.conn:
+            self.information_model.conn.commit()

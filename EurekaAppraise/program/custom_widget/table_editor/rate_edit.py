@@ -10,6 +10,7 @@ class RateEdit(QtWidgets.QLineEdit):
         self.setAlignment(QtCore.Qt.AlignRight)
         self.setValidator(QtGui.QRegExpValidator(QtCore.QRegExp('^[+-]?\\d*(\\.\\d{0,4})?')))
         self.editingFinished.connect(self.get_real)
+        self.setSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Preferred)
 
     def get_real(self):
         if self.displayText():
