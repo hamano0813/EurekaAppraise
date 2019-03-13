@@ -15,14 +15,16 @@ class InformationTab(QtWidgets.QFrame):
         self.information_model = InformationModel(conn, table_name, self)
         self.mapper.setModel(self.information_model)
         self.main_layout = QtWidgets.QFormLayout()
-        self.main_layout.setSpacing(10)
+        self.main_layout.setSpacing(5)
         self.setLayout(self.main_layout)
 
     # noinspection PyArgumentList
-    def add_widget(self, editor: QtWidgets.QWidget, field_cid: int):
-        name = self.information_model.title_name[field_cid]
-        self.main_layout.addRow(name, editor)
-        self.mapper.addMapping(editor, field_cid)
+    def add_widget(self, editor: QtWidgets.QWidget, field_name: str):
+        if not field_name in self.information_model.title_name:
+            return
+        idx = self.information_model.title_name.index(field_name)
+        self.main_layout.addRow(field_name, editor)
+        self.mapper.addMapping(editor, idx)
         self.mapper.setItemDelegate(InformationDelegate())
         self.mapper.toFirst()
 

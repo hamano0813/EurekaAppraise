@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-
 from PyQt5 import QtWidgets
 
 
@@ -10,6 +9,7 @@ class CheckCombo(QtWidgets.QComboBox):
         QtWidgets.QComboBox.__init__(self, parent)
         self.check_items = check_items
         self.checkbox_list = []
+        self.setMinimumWidth(len('、'.join(check_items)) * 15)
         self.setLineEdit(QtWidgets.QLineEdit())
         self.lineEdit().setReadOnly(True)
         self.list_widget = QtWidgets.QListWidget()
