@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from PyQt5 import QtWidgets, QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
 
 
 class SwitchRadio(QtWidgets.QFrame):
-    def __init__(self, switch_items: list, parent=None, flags=QtCore.Qt.FramelessWindowHint):
+    def __init__(self, switch_items: list, parent=None, flags=QtCore.Qt.Widget):
         QtWidgets.QFrame.__init__(self, parent, flags)
         self.switch_items = switch_items
         self.checkbox_list = []
@@ -17,12 +17,17 @@ class SwitchRadio(QtWidgets.QFrame):
 
         for idx, item in enumerate(self.switch_items):
             checkbox = QtWidgets.QCheckBox(item)
+            checkbox.clicked.connect(self.update_data)
             self.button_group.addButton(checkbox, idx)
             main_layout.addWidget(checkbox, alignment=QtCore.Qt.AlignVCenter)
 
         self.setLayout(main_layout)
         self.setContentsMargins(0, 0, 0, 0)
         self.setSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Preferred)
+
+    def update_data(self):
+        QtWidgets.QApplication.instance().postEvent(
+            self, QtGui.QKeyEvent(QtCore.QEvent.KeyPress, QtCore.Qt.Key_Enter, QtCore.Qt.NoModifier))
 
     @property
     def value(self):
