@@ -19,7 +19,7 @@ class InputDelegate(QtWidgets.QStyledItemDelegate):
         model: InputModel = index.model()
         data_type: str = model.data_type[index.column()]
         if data_type.startswith('Nchar'):
-            editor = LineEdit(parent, int(data_type.split('(')[1].rstrip(')')))
+            editor = LineEdit(int(data_type.split('(')[1].rstrip(')')), parent)
         elif data_type in EDITOR:
             editor = EDITOR[data_type](parent)
         else:

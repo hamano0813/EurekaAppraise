@@ -5,8 +5,8 @@ from PyQt5 import QtWidgets
 
 
 class BoolCheck(QtWidgets.QCheckBox):
-    def __init__(self, *args):
-        QtWidgets.QCheckBox.__init__(self, *args)
+    def __init__(self, parent=None, *args):
+        QtWidgets.QCheckBox.__init__(self, parent, *args)
 
     @property
     def value(self):

@@ -5,7 +5,7 @@ from PyQt5 import QtWidgets
 
 
 class LineEdit(QtWidgets.QLineEdit):
-    def __init__(self, parent, length=20, *args):
+    def __init__(self, length=20, parent=None, *args):
         QtWidgets.QLineEdit.__init__(self, parent, *args)
         self.setMaxLength(length)
         self.setMinimumWidth(length * 5)
