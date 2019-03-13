@@ -7,6 +7,7 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 class RateEdit(QtWidgets.QLineEdit):
     def __init__(self, parent=None, *args):
         QtWidgets.QLineEdit.__init__(self, parent, *args)
+        self.setMinimumHeight(22)
         self.setAlignment(QtCore.Qt.AlignRight)
         self.setValidator(QtGui.QRegExpValidator(QtCore.QRegExp('^[+-]?\\d*(\\.\\d{0,4})?')))
         self.editingFinished.connect(self.get_real)

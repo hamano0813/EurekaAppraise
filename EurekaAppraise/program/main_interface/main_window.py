@@ -102,7 +102,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.status = QtWidgets.QStatusBar()
         self.setStatusBar(self.status)
 
-        self.setMinimumSize(1280, 800)
+        self.setMinimumSize(1080, 720)
         self.setWindowIcon(QtGui.QIcon(':/icon/icon.png'))
         self.setWindowTitle(self.tr('Eureka Appraise'))
 
@@ -186,6 +186,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.conn = sqlite3.connect(file)
         self.set_enabled(True)
         self.setEnabled(True)
+        self.project_information()
 
     def create_action(self, name: str, slot: classmethod = None, icon: str = None) -> QtWidgets.QAction:
         action = QtWidgets.QAction(name, self)

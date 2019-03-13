@@ -7,6 +7,7 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 class IntEdit(QtWidgets.QLineEdit):
     def __init__(self, parent=None, *args):
         QtWidgets.QLineEdit.__init__(self, parent, *args)
+        self.setMinimumHeight(22)
         self.setAlignment(QtCore.Qt.AlignRight)
         self.setValidator(QtGui.QRegExpValidator(QtCore.QRegExp('^[+-]?\\d*')))
         self.editingFinished.connect(self.get_int)

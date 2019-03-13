@@ -9,6 +9,7 @@ class DateEdit(QtWidgets.QDateEdit):
         QtWidgets.QDateEdit.__init__(self, parent, *args)
         self.setCalendarPopup(True)
         self.setDisplayFormat('yyyy-MM-dd')
+        self.setMinimumHeight(22)
         self.calendarWidget().setGridVisible(True)
         self.calendarWidget().setHorizontalHeaderFormat(QtWidgets.QCalendarWidget.NoHorizontalHeader)
         self.calendarWidget().setVerticalHeaderFormat(QtWidgets.QCalendarWidget.NoVerticalHeader)

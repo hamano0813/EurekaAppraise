@@ -7,4 +7,3 @@ from .line_edit import LineEdit
 from .percent_edit import PercentEdit
 from .rate_edit import RateEdit
 from .real_edit import RealEdit
-from .bool_check import BoolCheck

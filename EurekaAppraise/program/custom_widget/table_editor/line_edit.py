@@ -8,7 +8,8 @@ class LineEdit(QtWidgets.QLineEdit):
     def __init__(self, length=20, parent=None, *args):
         QtWidgets.QLineEdit.__init__(self, parent, *args)
         self.setMaxLength(length)
-        self.setMinimumWidth(length * 5)
+        self.setMinimumWidth(length * 13)
+        self.setMinimumHeight(22)
         self.setSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Preferred)
 
     @property

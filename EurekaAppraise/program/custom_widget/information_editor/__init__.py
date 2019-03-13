@@ -3,3 +3,4 @@
 
 from .check_combo import CheckCombo
 from .switch_radio import SwitchRadio
+from .text_edit import TextEdit

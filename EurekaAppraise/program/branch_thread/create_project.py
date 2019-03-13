@@ -37,6 +37,8 @@ class CreateProjectThread(QtCore.QThread):
         date = self.code.split('-')[0] + '-01-01'
         try:
             c.execute(f"INSERT INTO [基础信息] ([项目编号], [评估基准日]) VALUES ('{self.code}', '{date}');")
+            c.execute(f"INSERT INTO [委托方信息] ([名称]) VALUES (NULL);")
+            c.execute(f"INSERT INTO [资产占有方信息] ([名称]) VALUES (NULL);")
             self.conn.commit()
         except sqlite3.OperationalError as e:
             self.errorPrinter.emit(str(e))

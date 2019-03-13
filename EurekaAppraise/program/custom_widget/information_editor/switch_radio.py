@@ -7,6 +7,7 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 class SwitchRadio(QtWidgets.QFrame):
     def __init__(self, switch_items: list, parent=None, flags=QtCore.Qt.Widget):
         QtWidgets.QFrame.__init__(self, parent, flags)
+        self.setMinimumHeight(22)
         self.switch_items = switch_items
         self.checkbox_list = []
         self.button_group = QtWidgets.QButtonGroup()

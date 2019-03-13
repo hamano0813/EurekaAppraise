@@ -30,7 +30,9 @@ class ProjectTableModel(QtCore.QAbstractTableModel):
         if not index.isValid():
             return QtCore.QVariant()
         elif role == QtCore.Qt.DisplayRole:
-            return self.project_table[index.row()][index.column()]
+            if not self.project_table[index.row()][index.column()]:
+                return ''
+            return self.project_table[index.row()][index.column()].replace('\n', '').replace(' ', '').replace('\r', '')
 
     def flags(self, index: QtCore.QModelIndex):
         if not index.isValid():
@@ -43,7 +45,7 @@ class ProjectTableView(QtWidgets.QTableView):
         QtWidgets.QTableView.__init__(self, parent)
         self.setSelectionBehavior(QtWidgets.QTableView.SelectRows)
         self.setSelectionMode(QtWidgets.QTableView.SingleSelection)
-        self.setMinimumWidth(450)
+        self.setMinimumWidth(600)
         self.verticalHeader().setMinimumWidth(30)
 
 
@@ -91,7 +93,8 @@ class LoadDialog(QtWidgets.QDialog):
         project_table_model = ProjectTableModel(project_table)
         self.load_table_view.setModel(project_table_model)
         self.load_table_view.setColumnWidth(0, 80)
-        self.load_table_view.setColumnWidth(1, 320)
+        self.load_table_view.setColumnWidth(1, 470)
+        self.load_table_view.setWordWrap(False)
         if self.exec_() and len(project_table):
             project_file = path + project_table[self.load_table_view.currentIndex().row()][0] + '.db3'
             return sqlite3.connect(project_file)
