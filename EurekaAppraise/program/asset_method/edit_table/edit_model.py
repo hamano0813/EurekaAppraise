@@ -185,6 +185,7 @@ class EditModel(QtCore.QAbstractTableModel):
         if data_type == 'Date':
             try:
                 d_str = value.replace('年', '-').replace('月', '-').replace('日', '-')
+                d_str = d_str + '1' if d_str.endswith('-') else d_str
                 _value = str(parser.parse(d_str).strftime('%Y-%m-%d')) if str(parser.parse(d_str)) != 'NaT' else None
             except ValueError as e:
                 print(value, index.row(), index.column(), e)
@@ -197,7 +198,7 @@ class EditModel(QtCore.QAbstractTableModel):
                 print(value, index.row(), index.column(), e)
         elif data_type == 'Int':
             try:
-                _value = int(str(value).replace(',', '', 5))
+                _value = int(float(str(value).replace(',', '', 5)))
             except ValueError as e:
                 print(value, index.row(), index.column(), e)
         elif data_type in ('Real', 'Rate'):
