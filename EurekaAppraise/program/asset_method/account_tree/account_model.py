@@ -54,9 +54,9 @@ class AccountModel(QtCore.QAbstractItemModel):
 
     def data(self, index: QtCore.QModelIndex, role=None):
         if not index.isValid():
-            return None
+            return QtCore.QVariant()
         if not self.conn:
-            return None
+            return QtCore.QVariant()
         if role == QtCore.Qt.TextColorRole:
             table_name = index.internalPointer().data(0)
             c = self.conn.cursor()

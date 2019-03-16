@@ -69,7 +69,6 @@ class InitializeFolder(QtCore.QObject):
 
 InitializeFolder()
 
-# rect = app.desktop().availableGeometry()
 main_window = MainWindow()
 main_window.show()
 
