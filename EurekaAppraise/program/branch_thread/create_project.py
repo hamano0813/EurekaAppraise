@@ -46,9 +46,9 @@ class CreateProjectThread(QtCore.QThread):
 
     def create_table(self, settings: dict):
         c = self.conn.cursor()
-        for table_name, table_setting in settings.items():
+        for table_name, setting in settings.items():
             field_stmt = ',\n'.join(
-                [f'\t[{field_name}] {data_type}' for field_name, data_type in table_setting.items()])
+                [f'\t[{field_name}] {data_type}' for field_name, data_type in setting.items()])
             try:
                 c.execute(f'CREATE TABLE [{table_name}] (\n{field_stmt});')
                 self.logPrinter.emit(self.tr('create table ') + f'{table_name}')

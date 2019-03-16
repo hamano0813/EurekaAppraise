@@ -3,7 +3,7 @@
 
 from PyQt5 import QtWidgets
 from .information_tab import InformationTab
-from ..custom_widget.table_editor import DateEdit, LineEdit, IntEdit, RealEdit
+from ..custom_widget.table_editor import DateEdit, LineEdit, RealEdit
 from ..custom_widget.information_editor import CheckCombo, SwitchRadio, TextEdit
 
 

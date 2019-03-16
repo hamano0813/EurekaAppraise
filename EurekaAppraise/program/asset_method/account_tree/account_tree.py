@@ -14,6 +14,7 @@ class AccountTree(QtWidgets.QTreeView):
         self.horizontalScrollBar().setStyleSheet('QScrollBar:horizontal{height:0px;}')
         account_model = AccountModel(conn, ACCOUNT_TREE)
         self.setModel(account_model)
+        # noinspection PyUnresolvedReferences
         self.doubleClicked[QtCore.QModelIndex].connect(self.parent().open_account)
         self.setColumnWidth(0, 130)
         self.setColumnWidth(1, 280)

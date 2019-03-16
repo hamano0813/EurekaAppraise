@@ -27,6 +27,7 @@ class SwitchRadio(QtWidgets.QFrame):
         self.setSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Preferred)
 
     def update_data(self):
+        # noinspection PyArgumentList
         QtWidgets.QApplication.instance().postEvent(
             self, QtGui.QKeyEvent(QtCore.QEvent.KeyPress, QtCore.Qt.Key_Enter, QtCore.Qt.NoModifier))
 

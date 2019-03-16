@@ -18,18 +18,3 @@ class TextEdit(QtWidgets.QPlainTextEdit):
     def value(self, text):
         if text:
             self.setPlainText(text)
-
-
-if __name__ == '__main__':
-    import sys
-
-    app = QtWidgets.QApplication(sys.argv)
-    app.setStyleSheet('''* {
-    font-family: '微软雅黑', 'Microsoft YaHei UI', monospace;
-    font-size: 9pt;
-    font-weight: 300;
-    color: #000000;
-}''')
-    w = TextEdit()
-    w.show()
-    sys.exit(app.exec_())
