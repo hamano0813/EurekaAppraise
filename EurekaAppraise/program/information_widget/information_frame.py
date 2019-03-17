@@ -56,4 +56,4 @@ class InformationFrame(QtWidgets.QTabWidget):
 
     def add_tab(self, tab_widget: InformationTab):
         tab_widget.mapper.toFirst()
-        self.addTab(tab_widget, tab_widget.information_model.table_name)
+        self.addTab(tab_widget, tab_widget.information_model.table)

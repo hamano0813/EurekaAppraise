@@ -8,6 +8,8 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 class EditHorizontalHeader(QtWidgets.QHeaderView):
     def __init__(self, orient=QtCore.Qt.Horizontal, parent=None):
         QtWidgets.QHeaderView.__init__(self, orient, parent)
+        self.setSectionsClickable(True)
+        self.setHighlightSections(False)
         self.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         # noinspection PyUnresolvedReferences
         self.customContextMenuRequested[QtCore.QPoint].connect(self.header_menu)

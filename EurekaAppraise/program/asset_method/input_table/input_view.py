@@ -12,10 +12,12 @@ class InputView(QtWidgets.QTableView):
     def __init__(self, parent=None):
         QtWidgets.QTableView.__init__(self, parent)
         self.setModel = self.set_width(self.setModel)
+        self.setSelectionBehavior(QtWidgets.QTableView.SelectRows | QtWidgets.QTableView.SelectColumns)
         self.verticalHeader().setFixedWidth(50)
         self.verticalHeader().setDefaultAlignment(QtCore.Qt.AlignCenter)
-        self.setSelectionBehavior(QtWidgets.QTableView.SelectRows | QtWidgets.QTableView.SelectColumns)
         self.verticalHeader().setSectionsClickable(True)
+        self.verticalHeader().setHighlightSections(False)
+        self.horizontalHeader().setSectionsClickable(True)
         self.horizontalHeader().setHighlightSections(False)
         self.setWordWrap(False)
         self.keyPressEvent = self.key_press(self.keyPressEvent)

@@ -20,8 +20,8 @@ class EditDelegate(QtWidgets.QStyledItemDelegate):
 
     def paint(self, painter: QtGui.QPainter, option: QtWidgets.QStyleOptionViewItem, index: QtCore.QModelIndex):
         model: EditModel = index.model()
-        data_type: str = model.data_type[index.column()]
-        if data_type == 'Bool':
+        dtype: str = model.dtype[index.column()]
+        if dtype == 'Bool':
             checkbox_option = QtWidgets.QStyleOptionButton()
             checkbox_option.rect = option.rect
             checkbox_option.rect.moveLeft(option.rect.x() + option.rect.width() // 2 - 6)
@@ -36,24 +36,24 @@ class EditDelegate(QtWidgets.QStyledItemDelegate):
 
     def editorEvent(self, event: QtCore.QEvent, model: QtCore.QAbstractItemModel, option, index: QtCore.QModelIndex):
         model: EditModel = index.model()
-        data_type: str = model.data_type[index.column()]
+        dtype: str = model.dtype[index.column()]
         rect: QtCore.QRect = option.rect
         if event.type() == QtCore.QEvent.MouseButtonPress and rect.contains(event.pos()):
-            if data_type == 'Bool':
-                data = model.data(index, QtCore.Qt.EditRole)
-                data = False if data else True
-                return model.setData(index, data, QtCore.Qt.EditRole)
+            if dtype == 'Bool':
+                value = model.data(index, QtCore.Qt.EditRole)
+                value = False if value else True
+                return model.setData(index, value, QtCore.Qt.EditRole)
         return QtWidgets.QStyledItemDelegate.editorEvent(self, event, model, option, index)
 
     def createEditor(self, parent, option, index: QtCore.QModelIndex):
         model: EditModel = index.model()
-        data_type: str = model.data_type[index.column()]
-        if data_type.startswith('Nchar'):
-            editor = LineEdit(int(data_type.split('(')[1].rstrip(')')), parent)
-        elif data_type == 'Bool':
+        dtype: str = model.dtype[index.column()]
+        if dtype.startswith('Nchar'):
+            editor = LineEdit(int(dtype.split('(')[1].rstrip(')')), parent)
+        elif dtype == 'Bool':
             editor = QtCore.QVariant()
-        elif data_type in EDITOR:
-            editor = EDITOR[data_type](parent)
+        elif dtype in EDITOR:
+            editor = EDITOR[dtype](parent)
         else:
             editor = QtWidgets.QLineEdit(parent)
         return editor

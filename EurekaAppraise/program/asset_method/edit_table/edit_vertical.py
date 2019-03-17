@@ -10,6 +10,8 @@ class EditVerticalHeader(QtWidgets.QHeaderView):
         QtWidgets.QHeaderView.__init__(self, orient, parent)
         self.setFixedWidth(50)
         self.setDefaultAlignment(QtCore.Qt.AlignCenter)
+        self.setSectionsClickable(True)
+        self.setHighlightSections(False)
         self.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         # noinspection PyUnresolvedReferences
         self.customContextMenuRequested[QtCore.QPoint].connect(self.header_menu)

@@ -7,26 +7,26 @@ from ...initialize_setting import EDIT_TABLE, SUMMARY_VIEW, SPECIAL_TABLE
 
 
 class TreeItem:
-    def __init__(self, row_data, parent=None):
+    def __init__(self, row_item, parent=None):
         self.parent_item = parent
-        self.item_data = row_data
+        self.row_item = row_item
         self.child_items = []
 
     def append_child(self, item):
         self.child_items.append(item)
 
-    def child(self, row):
+    def child(self, row: int):
         return self.child_items[row]
 
     def child_count(self):
         return len(self.child_items)
 
     def column_count(self):
-        return len(self.item_data)
+        return len(self.row_item)
 
     def data(self, column):
         try:
-            return self.item_data[column]
+            return self.row_item[column]
         except IndexError:
             return None
 
@@ -53,26 +53,24 @@ class AccountModel(QtCore.QAbstractItemModel):
             return self.root_item.column_count()
 
     def data(self, index: QtCore.QModelIndex, role=None):
-        if not index.isValid():
-            return QtCore.QVariant()
-        if not self.conn:
+        if not index.isValid() or not self.conn:
             return QtCore.QVariant()
         if role == QtCore.Qt.TextColorRole:
-            table_name = index.internalPointer().data(0)
+            table = index.internalPointer().data(0)
             c = self.conn.cursor()
             try:
-                if self.code(index, QtCore.Qt.DisplayRole) in EDIT_TABLE:
-                    if c.execute(f'SELECT count(*) FROM [{table_name}];').fetchone()[0]:
+                if self.code(index) in EDIT_TABLE:
+                    if c.execute(f'SELECT count(*) FROM [{table}];').fetchone()[0]:
                         return QtGui.QColor(QtCore.Qt.blue)
-                elif self.code(index, QtCore.Qt.DisplayRole) in SUMMARY_VIEW:
+                elif self.code(index) in SUMMARY_VIEW:
                     if self.code(index, QtCore.Qt.DisplayRole) == '表1':
-                        table_name = '表2'
-                    if c.execute(f'''SELECT sum([小计]) FROM [{table_name}];''').fetchone()[0]:
+                        table = '表2'
+                    if c.execute(f'''SELECT sum([小计]) FROM [{table}];''').fetchone()[0]:
                         return QtGui.QColor(QtCore.Qt.blue)
-                elif self.code(index, QtCore.Qt.DisplayRole) in SPECIAL_TABLE:
+                elif self.code(index) in SPECIAL_TABLE:
                     if c.execute(f'''SELECT CASE WHEN sum([_账面价值_]) IS NULL THEN 0 ELSE sum([_账面价值_]) END +
                                             CASE WHEN sum([评估价值_]) IS NULL THEN 0 ELSE sum([评估价值_]) END
-                                     FROM [{table_name}];''').fetchone()[0]:
+                                     FROM [{table}];''').fetchone()[0]:
                         return QtGui.QColor(QtCore.Qt.blue)
             except sqlite3.OperationalError as e:
                 print(e)
@@ -84,10 +82,8 @@ class AccountModel(QtCore.QAbstractItemModel):
         return item.data(index.column())
 
     @staticmethod
-    def code(index: QtCore.QModelIndex, role=None):
-        if not index.isValid():
-            return None
-        if role != QtCore.Qt.DisplayRole:
+    def code(index: QtCore.QModelIndex, role=QtCore.Qt.DisplayRole):
+        if not index.isValid() or not role == QtCore.Qt.DisplayRole:
             return None
         item = index.internalPointer()
         return item.data(0)
@@ -97,12 +93,12 @@ class AccountModel(QtCore.QAbstractItemModel):
             return QtCore.Qt.NoItemFlags
         return QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable
 
-    def headerData(self, section, orientation, role=None):
+    def headerData(self, section: int, orientation, role=None):
         if orientation == QtCore.Qt.Horizontal and role == QtCore.Qt.DisplayRole:
             return self.root_item.data(section)
         return None
 
-    def index(self, row, column, parent=None, *args, **kwargs):
+    def index(self, row: int, column: int, parent: TreeItem = None, *args, **kwargs):
         if not self.hasIndex(row, column, parent):
             return QtCore.QModelIndex()
         if not parent.isValid():

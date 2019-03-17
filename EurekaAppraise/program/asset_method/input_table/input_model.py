@@ -130,7 +130,6 @@ class InputModel(QtCore.QAbstractTableModel):
             try:
                 value = eval(formula_text)
             except (ZeroDivisionError, NameError) as e:
-                print(formula_text, e)
                 value = None
             target_index = self.createIndex(index.row(), self.title_name.index(formula.split('=')[0]))
             self.operation = True

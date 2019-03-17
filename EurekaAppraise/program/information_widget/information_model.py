@@ -9,17 +9,17 @@ class InformationModel(QtCore.QAbstractTableModel):
     title_name: list
     _data: list
 
-    def __init__(self, conn: sqlite3.Connection, table_name: str, parent):
+    def __init__(self, conn: sqlite3.Connection, table: str, parent):
         QtCore.QAbstractTableModel.__init__(self, parent)
         self.conn = conn
-        self.table_name = table_name
+        self.table = table
         self.initialize_data()
 
     def initialize_data(self):
         c = self.conn.cursor()
-        parameters = c.execute(f'PRAGMA table_info([{self.table_name}]);').fetchall()
+        parameters = c.execute(f'PRAGMA table_info([{self.table}]);').fetchall()
         self.title_name = [parameter[1] for parameter in parameters]
-        self._data = [list(row) for row in c.execute(f'SELECT * FROM [{self.table_name}];').fetchall()][0]
+        self._data = [list(row) for row in c.execute(f'SELECT * FROM [{self.table}];').fetchall()][0]
         c.close()
 
     def rowCount(self, parent=None, *args, **kwargs):
@@ -33,7 +33,7 @@ class InformationModel(QtCore.QAbstractTableModel):
             return QtCore.QVariant()
         if role == QtCore.Qt.EditRole:
             c = self.conn.cursor()
-            sql = f'SELECT [{self.title_name[index.column()]}] FROM [{self.table_name}];'
+            sql = f'SELECT [{self.title_name[index.column()]}] FROM [{self.table}];'
             c.execute(sql)
             value = c.fetchone()[0]
             c.close()
@@ -48,7 +48,7 @@ class InformationModel(QtCore.QAbstractTableModel):
                 value = ''
             try:
                 c = self.conn.cursor()
-                sql = f"UPDATE [{self.table_name}] SET [{self.title_name[index.column()]}]='{value}';"
+                sql = f"UPDATE [{self.table}] SET [{self.title_name[index.column()]}]='{value}';"
                 c.execute(sql)
                 c.close()
                 self.conn.commit()

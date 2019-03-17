@@ -8,33 +8,34 @@ from PyQt5 import QtCore
 
 
 class EditModel(QtCore.QAbstractTableModel):
+    errorPrinter = QtCore.pyqtSignal(NameError)
     totalChanged = QtCore.pyqtSignal(list)
-    title_name: list
-    data_type: list
-    auto_formula: tuple
-    basic_date: datetime.datetime
+    title: list
+    dtype: list
+    formula: tuple
+    date: datetime.datetime
     _data: list
 
     def __init__(self, conn: sqlite3.Connection, table_name: str, parent=None):
         QtCore.QAbstractTableModel.__init__(self, parent)
         self.range = self.operation = True
         self.conn = conn
-        self.table_name = table_name
+        self.table = table_name
         self.initialize_data()
 
     def initialize_data(self):
         c = self.conn.cursor()
-        parameters = c.execute(f'PRAGMA table_info([{self.table_name}]);').fetchall()
-        self.title_name = [parameter[1] for parameter in parameters]
-        self.data_type = [parameter[2].capitalize() for parameter in parameters]
-        self.auto_formula = c.execute(f"SELECT [强制], [等式] FROM [公式] WHERE [表名]='{self.table_name}';").fetchall()
-        self.basic_date = parser.parse(c.execute(f'SELECT [评估基准日] FROM [基础信息];').fetchall()[0][0])
-        self._data = [list(row) for row in c.execute(f'SELECT * FROM [{self.table_name}];').fetchall()]
+        parameters = c.execute(f'PRAGMA table_info([{self.table}]);').fetchall()
+        self.title = [parameter[1] for parameter in parameters]
+        self.dtype = [parameter[2].capitalize() for parameter in parameters]
+        self.formula = c.execute(f"SELECT [强制], [等式] FROM [公式] WHERE [表名]='{self.table}';").fetchall()
+        self.date = parser.parse(c.execute(f'SELECT [评估基准日] FROM [基础信息];').fetchall()[0][0])
+        self._data = [list(row) for row in c.execute(f'SELECT * FROM [{self.table}];').fetchall()]
         c.close()
 
     def headerData(self, section: int, orientation, role=QtCore.Qt.DisplayRole):
         if orientation == QtCore.Qt.Horizontal and role == QtCore.Qt.DisplayRole:
-            return [name.strip('_') for name in self.title_name][section]
+            return [name.strip('_') for name in self.title][section]
         elif orientation == QtCore.Qt.Vertical and role == QtCore.Qt.DisplayRole:
             if section == self.rowCount() - 1:
                 return '*'
@@ -42,7 +43,7 @@ class EditModel(QtCore.QAbstractTableModel):
         return QtCore.QVariant()
 
     def columnCount(self, parent=QtCore.QModelIndex(), *args, **kwargs):
-        return len(self.title_name)
+        return len(self.title)
 
     def rowCount(self, parent=QtCore.QModelIndex(), *args, **kwargs):
         return len(self._data) + 1
@@ -50,33 +51,33 @@ class EditModel(QtCore.QAbstractTableModel):
     def data(self, index: QtCore.QModelIndex, role=None):
         if not index.isValid():
             return QtCore.QVariant()
-        last_row = index.row() == self.rowCount() - 1
-        value = None if last_row else self._data[index.row()][index.column()]
-        data_type: str = self.data_type[index.column()]
+        at_last = index.row() == self.rowCount() - 1
+        value = None if at_last else self._data[index.row()][index.column()]
+        dtype: str = self.dtype[index.column()]
         if role == QtCore.Qt.DisplayRole:
-            if last_row or value is None:
+            if at_last or value is None:
                 return ''
-            elif data_type == 'Date':
+            elif dtype == 'Date':
                 try:
                     return parser.parse(value).strftime('%Y-%m-%d')
                 except ValueError as e:
-                    print(value, e)
+                    self.errorPrinter.emit(e)
                     return value
-            elif data_type == 'Percent':
+            elif dtype == 'Percent':
                 return f'{value * 100:,.02f}%'
-            elif data_type == 'Int':
+            elif dtype == 'Int':
                 return f'{value:,d}'
-            elif data_type == 'Real':
+            elif dtype == 'Real':
                 return f'{value:,.02f}'
-            elif data_type == 'Rate':
+            elif dtype == 'Rate':
                 return f'{value:,.04f}'
-            elif data_type == 'Bool':
+            elif dtype == 'Bool':
                 return '√' if value else ''
-            elif data_type.startswith('Nchar'):
+            elif dtype.startswith('Nchar'):
                 return value
             return QtCore.QVariant()
         elif role == QtCore.Qt.TextAlignmentRole:
-            if data_type in ('Percent', 'Int', 'Real', 'Rate'):
+            if dtype in ('Percent', 'Int', 'Real', 'Rate'):
                 return QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter
             return QtCore.Qt.AlignVCenter
         elif role == QtCore.Qt.EditRole:
@@ -87,14 +88,14 @@ class EditModel(QtCore.QAbstractTableModel):
         if not index.isValid():
             return QtCore.QVariant()
         last_row = index.row() == self.rowCount() - 1
-        auto_columns = [formula.split('=')[0] for auto, formula in self.auto_formula if auto]
+        auto_columns = [formula.split('=')[0] for auto, formula in self.formula if auto]
         if last_row:
             self.insertRows(index.row())
         if role == QtCore.Qt.EditRole:
-            if self.title_name[index.column()] not in auto_columns or self.operation:
+            if self.title[index.column()] not in auto_columns or self.operation:
                 self._data[index.row()][index.column()] = value
-            for formula_setting in self.auto_formula:
-                if self.title_name[index.column()] in formula_setting[1].split('=')[1]:
+            for formula_setting in self.formula:
+                if self.title[index.column()] in formula_setting[1].split('=')[1]:
                     self.automatic_operation(index, formula_setting)
             for row in range(self.rowCount() - 2, -1, -1):
                 if any(self._data[row]):
@@ -106,8 +107,8 @@ class EditModel(QtCore.QAbstractTableModel):
     def flags(self, index: QtCore.QModelIndex):
         if not index.isValid():
             QtCore.QVariant()
-        for locking, formula in self.auto_formula:
-            if locking and self.title_name[index.column()] == formula.split('=')[0]:
+        for locking, formula in self.formula:
+            if locking and self.title[index.column()] == formula.split('=')[0]:
                 return QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable
         return QtCore.Qt.ItemIsEditable | QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable
 
@@ -115,7 +116,7 @@ class EditModel(QtCore.QAbstractTableModel):
         def get_sorted_key(row_data):
             if row_data[column_id]:
                 return row_data[column_id]
-            elif self.data_type[column_id].startswith('Nchar') or self.data_type[column_id] == 'Date':
+            elif self.dtype[column_id].startswith('Nchar') or self.dtype[column_id] == 'Date':
                 return ''
             return 0
 
@@ -138,13 +139,13 @@ class EditModel(QtCore.QAbstractTableModel):
     @property
     def total(self):
         return [sum([self._data[i][c_idx] if self._data[i][c_idx] else 0 for i in range(self.rowCount() - 1)])
-                if self.data_type[c_idx] in ('Real', 'Int') else None for c_idx in range(self.columnCount())]
+                if self.dtype[c_idx] in ('Real', 'Int') else None for c_idx in range(self.columnCount())]
 
     def automatic_operation(self, index: QtCore.QModelIndex, formula_setting: tuple):
         auto, formula = formula_setting
-        if auto or not self._data[index.row()][self.title_name.index(formula.split('=')[0])]:
+        if auto or not self._data[index.row()][self.title.index(formula.split('=')[0])]:
             formula_text = formula.split('=')[1]
-            for c_idx, title in enumerate(self.title_name):
+            for c_idx, title in enumerate(self.title):
                 if not index.row() == self.rowCount() - 1 and self._data[index.row()][c_idx]:
                     formula_text = formula_text.replace(title, str(self._data[index.row()][c_idx]))
                 else:
@@ -154,9 +155,9 @@ class EditModel(QtCore.QAbstractTableModel):
             try:
                 value = eval(formula_text)
             except (ZeroDivisionError, NameError) as e:
-                print(formula_text, e)
+                self.errorPrinter.emit(e)
                 value = None
-            target_index = self.createIndex(index.row(), self.title_name.index(formula.split('=')[0]))
+            target_index = self.createIndex(index.row(), self.title.index(formula.split('=')[0]))
             self.operation = True
             self.setData(target_index, value)
             self.operation = False
@@ -165,9 +166,9 @@ class EditModel(QtCore.QAbstractTableModel):
         try:
             date = parser.parse(date_text)
         except ValueError as e:
-            print(date_text, e)
+            self.errorPrinter.emit(e)
             return None
-        months = (self.basic_date.year - date.year) * 12 + (self.basic_date.month - date.month)
+        months = (self.date.year - date.year) * 12 + (self.date.month - date.month)
         if not months:
             return None
         elif months < 0:
@@ -181,41 +182,41 @@ class EditModel(QtCore.QAbstractTableModel):
 
     def paste_data(self, index: QtCore.QModelIndex, value):
         _value = None
-        data_type: str = self.data_type[index.column()]
+        data_type: str = self.dtype[index.column()]
         if data_type == 'Date':
             try:
                 d_str = value.replace('年', '-').replace('月', '-').replace('日', '-')
                 d_str = d_str + '1' if d_str.endswith('-') else d_str
                 _value = str(parser.parse(d_str).strftime('%Y-%m-%d')) if str(parser.parse(d_str)) != 'NaT' else None
             except ValueError as e:
-                print(value, index.row(), index.column(), e)
+                self.errorPrinter.emit(e)
         elif data_type == 'Percent':
             try:
                 if '%' in str(value):
                     _value = float(str(value).replace(',', '', 5).replace('%', '')) / 100
                 _value = float(str(value).replace(',', '', 5))
             except ValueError as e:
-                print(value, index.row(), index.column(), e)
+                self.errorPrinter.emit(e)
         elif data_type == 'Int':
             try:
                 _value = int(float(str(value).replace(',', '', 5)))
             except ValueError as e:
-                print(value, index.row(), index.column(), e)
+                self.errorPrinter.emit(e)
         elif data_type in ('Real', 'Rate'):
             try:
                 _value = float(str(value).replace(',', '', 5))
             except ValueError as e:
-                print(value, index.row(), index.column(), e)
+                self.errorPrinter.emit(e)
         elif data_type == 'Bool':
             try:
                 _value = True if str(value).strip() == '√' else False
             except ValueError as e:
-                print(value, index.row(), index.column(), e)
+                self.errorPrinter.emit(e)
         elif data_type.startswith('Nchar'):
             try:
                 _value = str(value).strip()[0: int(data_type.split('(')[1].rstrip(')'))]
             except ValueError as e:
-                print(value, index.row(), index.column(), e)
+                self.errorPrinter.emit(e)
         self.setData(index, _value)
 
     def copy_range(self, select_range):
@@ -255,9 +256,9 @@ class EditModel(QtCore.QAbstractTableModel):
 
     def save_data(self):
         c = self.conn.cursor()
-        c.execute(f'DELETE FROM [{self.table_name}];')
+        c.execute(f'DELETE FROM [{self.table}];')
         placeholder = ', '.join((['?'] * self.columnCount()))
-        c.executemany(f'INSERT INTO [{self.table_name}] VALUES ({placeholder})', self._data)
+        c.executemany(f'INSERT INTO [{self.table}] VALUES ({placeholder})', self._data)
         c.close()
         self.conn.commit()
         self.totalChanged.emit(self.total)

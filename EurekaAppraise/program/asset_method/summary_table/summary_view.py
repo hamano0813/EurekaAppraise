@@ -16,6 +16,8 @@ class SummaryView(QtWidgets.QTableView):
         self.verticalHeader().setFixedWidth(50)
         self.verticalHeader().setDefaultAlignment(QtCore.Qt.AlignCenter)
         self.verticalHeader().setSectionsClickable(True)
+        self.verticalHeader().setHighlightSections(False)
+        self.horizontalHeader().setSectionsClickable(True)
         self.horizontalHeader().setHighlightSections(False)
         self.setWordWrap(False)
         self.keyPressEvent = self.key_press(self.keyPressEvent)

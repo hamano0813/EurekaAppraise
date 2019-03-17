@@ -17,9 +17,6 @@ class EditView(QtWidgets.QTableView):
         self.setVerticalHeader(EditVerticalHeader(QtCore.Qt.Vertical, self))
         self.setHorizontalHeader(EditHorizontalHeader(QtCore.Qt.Horizontal, self))
         self.setSelectionBehavior(QtWidgets.QTableView.SelectRows | QtWidgets.QTableView.SelectColumns)
-        self.verticalHeader().setSectionsClickable(True)
-        self.horizontalHeader().setSectionsClickable(True)
-        self.horizontalHeader().setHighlightSections(False)
         self.setWordWrap(False)
         self.keyPressEvent = self.key_press(self.keyPressEvent)
         self.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
@@ -29,8 +26,8 @@ class EditView(QtWidgets.QTableView):
     def set_width(self, func):
         def wrapper(model: EditModel):
             func(model)
-            for idx, data_type in enumerate(model.data_type):
-                title_width = len(model.title_name[idx]) * CHARACTER_WIDTH
+            for idx, data_type in enumerate(model.dtype):
+                title_width = len(model.title[idx]) * CHARACTER_WIDTH
                 if data_type == 'Date':
                     self.setColumnWidth(idx, max(100, title_width))
                 elif data_type == 'Real':
