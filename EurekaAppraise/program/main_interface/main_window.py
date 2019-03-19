@@ -7,20 +7,19 @@ from PyQt5 import QtWidgets, QtGui
 from .create_dialog import CreateDialog
 from .load_dialog import LoadDialog
 from .option_dialog import OptionDialog
-from ..branch_thread import CreateProjectThread
+from ..branch_thread import CreateProjectThread, ImportDataThread
 from ..information_widget.information_frame import InformationFrame
 from ..asset_method.account_tree import AccountTree
 from ..asset_method.edit_table import EditTable
 from ..asset_method.input_table import InputTable
 from ..asset_method.summary_table import SummaryTable
-# from ..custom_widget import UnFrameWindow
 from ..initialize_setting import EDIT_TABLE, SUMMARY_VIEW, SPECIAL_TABLE
 from program.resource import *
 
 
 class MainWindow(QtWidgets.QMainWindow):
     conn: sqlite3.Connection = None
-    branch_thread = QtCore.QThread()
+    project_file: str
 
     def __init__(self, parent=None, flags=QtCore.Qt.WindowMinMaxButtonsHint | QtCore.Qt.WindowCloseButtonHint):
         QtWidgets.QMainWindow.__init__(self, parent, flags)
@@ -84,9 +83,11 @@ class MainWindow(QtWidgets.QMainWindow):
                                           work_draft])
 
         work_staff_action = self.create_action(self.tr('Staff'))
+        import_data_action = self.create_action(self.tr('Import Data'), self.import_data)
         about_program_action = self.create_action(self.tr('About'))
         option_menu = self.create_menu(self.tr('Option'), None,
                                        [work_staff_action,
+                                        import_data_action,
                                         about_program_action])
 
         self.menuBar().addMenu(project_menu)
@@ -109,10 +110,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.set_enabled(False)
 
     def create_project(self):
-        project_file, project_code = CreateDialog().get_project_path()
-        if project_file:
+        self.project_file, project_code = CreateDialog().get_project_path()
+        if self.project_file:
             self.close_project()
-            if os.path.exists(project_file):
+            if os.path.exists(self.project_file):
                 box = QtWidgets.QMessageBox(QtWidgets.QMessageBox.Warning, '', '')
                 box.setWindowIcon(QtGui.QIcon(':/icon/icon.png'))
                 box.setWindowTitle(self.tr('Warning'))
@@ -121,18 +122,30 @@ class MainWindow(QtWidgets.QMainWindow):
                 box.addButton(self.tr('Cancel'), QtWidgets.QMessageBox.NoRole)
                 box.exec_()
                 if box.clickedButton() == yes:
-                    os.remove(project_file)
+                    os.remove(self.project_file)
             self.setEnabled(False)
-            create_database_thread = CreateProjectThread(project_file, project_code, self)
+            create_database_thread = CreateProjectThread(self.project_file, project_code, self)
             create_database_thread.logPrinter.connect(self.status.showMessage)
             create_database_thread.errorPrinter.connect(print)
             create_database_thread.finished.connect(self.start_project)
             create_database_thread.start()
 
+    def import_data(self):
+        data_path = QtWidgets.QFileDialog().getOpenFileName(None, self.tr('Load Data File'), 'C:/',
+                                                            self.tr('Excel 2007 File *.xlsx'),
+                                                            options=QtWidgets.QFileDialog.DontResolveSymlinks)[0]
+        if data_path:
+            self.setEnabled(False)
+            import_data_thread = ImportDataThread(self.project_file, data_path, self)
+            import_data_thread.logPrinter.connect(self.status.showMessage)
+            import_data_thread.errorPrinter.connect(print)
+            import_data_thread.finished.connect(self.setEnabled)
+            import_data_thread.start()
+
     def load_project(self):
-        conn = LoadDialog().load_project()
-        if conn:
-            self.conn = conn
+        project = LoadDialog().load_project()
+        if project:
+            self.project_file, self.conn = project
             self.set_enabled(False)
             self.set_enabled(True)
 

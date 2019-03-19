@@ -76,7 +76,7 @@ class LoadDialog(QtWidgets.QDialog):
         main_layout.addWidget(button_box, 1, 0, 1, 1, QtCore.Qt.AlignRight)
         self.setLayout(main_layout)
 
-    def load_project(self) -> sqlite3.Connection:
+    def load_project(self) -> tuple:
         config = configparser.ConfigParser()
         config.read('config.ini')
         path = config.get('path', 'default_folder') + '/'
@@ -97,4 +97,4 @@ class LoadDialog(QtWidgets.QDialog):
         self.load_table_view.setWordWrap(False)
         if self.exec_() and len(project_table):
             project_file = path + project_table[self.load_table_view.currentIndex().row()][0] + '.db3'
-            return sqlite3.connect(project_file)
+            return project_file, sqlite3.connect(project_file)
