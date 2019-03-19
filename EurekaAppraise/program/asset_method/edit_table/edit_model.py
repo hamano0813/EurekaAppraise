@@ -190,7 +190,7 @@ class EditModel(QtCore.QAbstractTableModel):
                 d_str = value.replace('年', '-').replace('月', '-').replace('日', '')
                 d_str = d_str + '1' if d_str.endswith('-') else d_str
                 _value = str(parser.parse(d_str).strftime('%Y-%m-%d')) if str(parser.parse(d_str)) != 'NaT' else None
-            except ValueError as e:
+            except (ValueError, TypeError) as e:
                 self.errorPrinter.emit(e)
         elif data_type == 'Percent':
             try:

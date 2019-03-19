@@ -8,6 +8,7 @@ from openpyxl.worksheet.worksheet import Worksheet
 from PyQt5 import QtCore
 from ..initialize_setting import EDIT_TABLE, SPECIAL_TABLE
 from ..asset_method.edit_table.edit_model import EditModel
+from ..asset_method.input_table.input_model import InputModel
 
 
 class ImportDataThread(QtCore.QThread):
@@ -33,10 +34,11 @@ class ImportDataThread(QtCore.QThread):
                 self.paste_special_table(ws_name)
         self.wb.close()
         self.conn.close()
+        self.logPrinter.emit('Import data finished')
         self.finished.emit(True)
 
     def paste_edit_table(self, worksheet_name):
-        self.logPrinter.emit(self.tr('Import') + worksheet_name)
+        self.logPrinter.emit(self.tr('Import ') + worksheet_name)
         model = EditModel(self.conn, worksheet_name)
         ws: Worksheet = self.wb[worksheet_name]
         temp = tuple(ws.values)
@@ -46,4 +48,13 @@ class ImportDataThread(QtCore.QThread):
         model.paste_range([model.createIndex(0, 0)], data_text)
 
     def paste_special_table(self, worksheet_name):
-        pass
+        self.logPrinter.emit(self.tr('Import ') + worksheet_name)
+        model = InputModel(self.conn, worksheet_name)
+        ws: Worksheet = self.wb[worksheet_name]
+        if worksheet_name == '表7':
+            temp = tuple(ws['C8:D16'])
+        else:
+            temp = tuple(ws['C8:D38'])
+        data = [[str(cell.value) if cell else '' for cell in row] for row in temp]
+        data_text = '\n'.join(['\t'.join(row) for row in data])
+        model.paste_range([model.createIndex(0, 1)], data_text)

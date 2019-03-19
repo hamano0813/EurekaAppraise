@@ -110,7 +110,7 @@ class InputModel(QtCore.QAbstractTableModel):
                     formula_text = formula_text.replace(title, '0')
             try:
                 value = eval(formula_text)
-            except (ZeroDivisionError, NameError, SyntaxError) as e:
+            except (ZeroDivisionError, NameError, SyntaxError, TypeError) as e:
                 print(formula_text, e)
                 value = None
             target_index = self.createIndex(self.row_title.index(formula.split('=')[0]), index.column())
