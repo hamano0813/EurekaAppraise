@@ -181,7 +181,7 @@ class EditModel(QtCore.QAbstractTableModel):
             return f'{months // 12}年{months % 12}月'
 
     def paste_data(self, index: QtCore.QModelIndex, value):
-        if value is '':
+        if not value:
             return
         _value = None
         data_type: str = self.dtype[index.column()]
@@ -190,8 +190,8 @@ class EditModel(QtCore.QAbstractTableModel):
                 d_str = value.replace('年', '-').replace('月', '-').replace('日', '')
                 d_str = d_str + '1' if d_str.endswith('-') else d_str
                 _value = str(parser.parse(d_str).strftime('%Y-%m-%d')) if str(parser.parse(d_str)) != 'NaT' else None
-            except:
-                self.errorPrinter.emit('error')
+            except ValueError as e:
+                self.errorPrinter.emit(e)
         elif data_type == 'Percent':
             try:
                 if '%' in str(value):
